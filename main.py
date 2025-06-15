@@ -1,4 +1,31 @@
 import tkinter as tk
+#python -m pip install wikipedia
+import wikipedia
+#python -m pip install google-generativeai
+import google.generativeai as genai
+
+from funciones import *
+
+def obtenerLista(): #Tengo que agregar una ventana con entry (función aparte)
+    try:
+        # Configurar Wikipedia
+        wikipedia.set_lang("es")
+        contenido = wikipedia.summary("Animales", sentences=5)
+        # Configurar Gemini
+        genai.configure(api_key="AIzaSyCj7ewGgJ0c7Cb_nHrHfzkN4lGDFlZ_iY0")
+        model = genai.GenerativeModel(model_name = "gemini-1.5-flash")
+        response = model.generate_content(
+        f"Genérame una lista de 20 animales diferentes a partir de {contenido} y su respectivo nombre científico" +
+        "únicamente con este formato: animal: nombreCientífico. Sin ningún tipo de texto más ni negritas ni enumeración." +
+        "Por ejemplo: Leon: Panthera leo"
+        )
+        resultado = response.text
+        resultado = limpiarTexto(resultado)
+        resultado = resultado[:-1] #Para quitar el enter del final.
+        print(resultado)
+        grabaTxt("prueba", resultado)
+    except Exception as e:
+        print(f"Ha ocurrido un error con: {e}")
 
 def main():
     """
@@ -16,7 +43,7 @@ def main():
     title = tk.Label(root, text="Zooinventario")
     title.pack()
 
-    diccGlobal["botones"]["boton1"] = tk.Button(root, text="1. Obtener lista", width=20)
+    diccGlobal["botones"]["boton1"] = tk.Button(root, text="1. Obtener lista", width=20, command=obtenerLista)
     diccGlobal["botones"]["boton1"].pack()  
     diccGlobal["botones"]["boton2"] = tk.Button(root, text="2. Crear Inventario", width=20)
     diccGlobal["botones"]["boton2"].pack()
