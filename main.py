@@ -63,7 +63,7 @@ def ventanaAprobacion(comandoAceptar):
     botonRechazar = tk.Button(root, text="Rechazar", command=root.destroy)
     botonRechazar.pack(pady=5)
     
-def obtenerLista(numeroTotales): #Tengo que agregar una ventana con entry (función aparte)
+def obtenerLista(numeroTotales):
     try:
         # Configurar Wikipedia
         wikipedia.set_lang("es")
@@ -80,7 +80,7 @@ def obtenerLista(numeroTotales): #Tengo que agregar una ventana con entry (funci
         resultado = limpiarTexto(resultado)
         resultado = resultado[:-1] #Para quitar el enter del final.
         print(resultado)
-        grabaTxt("prueba", resultado)
+        grabaTxt("Animales", resultado)
         mensaje = f"Se ha creado el txt con los {numeroTotales} animales."
         ventanaConfirmacion(mensaje)
     except Exception as e:
