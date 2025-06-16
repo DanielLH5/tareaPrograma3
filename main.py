@@ -62,7 +62,11 @@ def ventanaAprobacion(comandoAceptar):
     botonAceptar.pack(pady=5)
     botonRechazar = tk.Button(root, text="Rechazar", command=root.destroy)
     botonRechazar.pack(pady=5)
-    
+
+##################################################
+# 1. Obtener lista
+##################################################
+
 def obtenerLista(numeroTotales):
     try:
         # Configurar Wikipedia
@@ -107,6 +111,10 @@ def ventanaObtenerLista():
     searchButton = tk.Button(search, text="Buscar", width=30, command=lambda: validarObtenerLista(diccGlobal["numero"].get()))
     searchButton.pack()
     search.mainloop()
+
+##################################################
+# Ventana Principal
+##################################################
 
 def main():
     """
