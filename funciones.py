@@ -22,3 +22,39 @@ def grabaTxt(archivoTxt,datos):
     except:
         print(f"Error al leer el archivo: {archivoTxt}")
     return
+
+#Clase Animal
+class Animal:
+    """
+    Funcionamiento: La clase animal.
+    Entradas: NA.
+    Salidas: El init, las funciones de asignar y mostrar, indicar datos.
+    """
+    def __init__(self):
+        self.id=""
+        self.nombres=("","")
+        self.url=""
+        self.informacion=[int,int,str,float]
+        return
+    def asignarId(self,pId):   
+        self.id=pId
+        return 
+    def asignarNombres(self,pNombres):
+        self.nombres=pNombres
+        return
+    def asignarUrl(self,pUrl):
+        self.url=pUrl
+        return 
+    def asignarInformacion(self,pInformacion):
+        self.informacion=pInformacion
+        return 
+    def mostrarId(self):
+        return self.id
+    def mostrarNombres(self):
+        return self.nombres
+    def mostrarUrl(self):
+        return self.url
+    def mostrarInformacion(self):
+        return self.informacion
+    def indicarDatos(self):
+        return self.id,self.nombres,self.url,self.informacion
