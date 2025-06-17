@@ -1,4 +1,5 @@
 import unicodedata
+import pickle
 
 def limpiarTexto(texto):
     textoNorm = unicodedata.normalize('NFKD', texto)
@@ -22,6 +23,30 @@ def grabaTxt(archivoTxt,datos):
     except:
         print(f"Error al leer el archivo: {archivoTxt}")
     return
+
+def guardarPickle(nombreArchivo, datos):
+    """
+    Funcionamiento:
+    Guarda datos serializados en un archivo usando pickle.
+    Entradas:
+    - nombreArchivo (str): Nombre del archivo donde guardar (ej. "inventarioAnimales.pkl").
+    - datos (cualquier objeto): Datos a guardar.
+    Salidas:
+    - NA
+    """
+    try:
+        with open(nombreArchivo, "wb") as f:
+            pickle.dump(datos, f)
+    except Exception as e:
+        print(f"Error al guardar con pickle: {e}")
+        
+def cargarPickle(nombreArchivo):
+    try:
+        with open(nombreArchivo, "rb") as f:
+            return pickle.load(f)
+    except Exception as e:
+        print(f"Error al cargar con pickle: {e}")
+        return []
 
 #Clase Animal
 class Animal:
