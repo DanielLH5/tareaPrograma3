@@ -89,7 +89,7 @@ def obtenerDatosAnimalGemini(model, nombreComun):
 
 def peticionGeminiAnimales(numeroTotales, contenido):
     mensaje = (
-        f"Genérame una lista de {numeroTotales} animales distintos, asegurándote de que cada uno sea específico y único." +
+        f"Genérame una lista de únicamnete {numeroTotales} animales distintos, asegurándote de que cada uno sea específico y único." +
         f"Usa exclusivamente los animales mencionados en el siguiente texto de Wikipedia: {contenido}" +
         "Utiliza únicamente nombres comunes detallados (por ejemplo: 'Águila real', 'Zorro ártico', 'Delfín nariz de botella', 'Mariposa monarca')." +
         "No uses nombres genéricos como 'Águila', 'Zorro' o 'Mariposa'." +
@@ -150,3 +150,10 @@ class Animal:
         return self.informacion
     def indicarDatos(self):
         return self.id,self.nombres,self.url,self.informacion
+    
+##################################################
+# Nombre de archivos
+##################################################    
+
+inventarioPkl = "inventario.pkl"
+animalesTxt = "animales.txt"

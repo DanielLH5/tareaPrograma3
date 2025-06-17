@@ -66,6 +66,75 @@ def ventanaAprobacion(comandoAceptar):
     botonRechazar.pack(pady=5)
 
 ##################################################
+# 4. Estadística por estado
+##################################################
+
+def obtenerPorcentajes(estadisticas):
+    pVivo = (estadisticas[0] / 20) * 100
+    pVivo = round(pVivo, 1)
+    pEnfermo = (estadisticas[1] / 20) * 100
+    pEnfermo = round(pEnfermo, 1)
+    pTranslado = (estadisticas[2] / 20) * 100
+    pTranslado = round(pTranslado, 1)
+    pMuertoEnMuseo = (estadisticas[3] / 20) * 100
+    pMuertoEnMuseo = round(pMuertoEnMuseo, 1)
+    pMuerto = (estadisticas[4] / 20) * 100
+    pMuerto = round(pMuerto, 1)
+    return (pVivo, pEnfermo, pTranslado, pMuertoEnMuseo, pMuerto)
+
+def obtenerCantidadPorEstado(estado, estados):
+    contador = 0
+    for info in estados:
+        if info[0] == estado:
+            contador += 1
+    return contador
+
+def contarEstadosAnimales(estados):
+    vivo = obtenerCantidadPorEstado(1, estados)
+    enfermo = obtenerCantidadPorEstado(2, estados)
+    translado = obtenerCantidadPorEstado(3, estados)
+    muertoEnMuseo = obtenerCantidadPorEstado(4, estados)
+    muerto = obtenerCantidadPorEstado(5, estados)
+    return (vivo, enfermo, translado, muertoEnMuseo, muerto)
+
+def obtenerEstadísticaPorEstado():
+    #('id', ('nombreColoquial', 'nombreCientifico'), 'url', [5, 1, 'c', 31.39])
+    documento = cargarPickle(inventarioPkl)
+    estados = []
+    for animal in documento:
+        info = animal.mostrarInformacion()
+        estados.append(info)
+    estadisticas = contarEstadosAnimales(estados)
+    porcentajes = obtenerPorcentajes(estadisticas)
+    return ventanaEstadisticaPorEstado(estadisticas, porcentajes)
+    
+def ventanaEstadisticaPorEstado(estadisticas, porcentajes):
+    ventana = tk.Toplevel()
+    ventana.title("Estadística por estado")
+    ventana.geometry("350x200")
+    titulo = tk.Label(ventana, text="Estadística por estado", font=(14))
+    titulo.grid(row=0, column=0, pady=10)
+    #Encabezados
+    tk.Label(ventana, text="").grid(row=1, column=0)
+    tk.Label(ventana, text="Cantidad").grid(row=1, column=1)
+    tk.Label(ventana, text="Porcentaje").grid(row=1, column=2)
+    estados = ["Vivo", "Enfermo", "Traslado", "Muerto en museo", "Muerto"]
+    for i in range(len(estados)):
+        tk.Label(ventana, text=estados[i]).grid(row=i+2, column=0, sticky="w", padx=5)
+        tk.Entry(ventana, width=5).grid(row=i+2, column=1)
+        tk.Entry(ventana, width=5).grid(row=i+2, column=2)
+        # Insertar datos en los campos
+        e1 = tk.Entry(ventana, width=5)
+        e1.insert(0, estadisticas[i])
+        e1.config(state='readonly')
+        e1.grid(row=i+2, column=1)
+        e2 = tk.Entry(ventana, width=5)
+        e2.insert(0, porcentajes[i])
+        e2.config(state='readonly')
+        e2.grid(row=i+2, column=2)
+    ventana.mainloop()
+    
+##################################################
 # 2. Crear inventario
 ##################################################
 
@@ -104,7 +173,7 @@ def crearInventarioDesdeTxt():
     print("\nObjetos creados:") #Print temporal en terminal
     for animal in listaObjetos:
         print(animal.indicarDatos())
-    guardarPickle("inventario.pkl", listaObjetos)
+    guardarPickle(inventarioPkl, listaObjetos)
     ventanaConfirmacion("Inventario creado y guardado con éxito en 'inventario.pkl'.") #Guarda en pickle
     return listaObjetos
 
@@ -116,7 +185,7 @@ def obtenerLista(numeroTotales):
     try:
         # Configurar Wikipedia
         wikipedia.set_lang("es")
-        contenido = wikipedia.summary("Animales", sentences=5)
+        contenido = wikipedia.summary(animalesTxt, sentences=5)
         # Configurar Gemini
         genai.configure(api_key="AIzaSyCj7ewGgJ0c7Cb_nHrHfzkN4lGDFlZ_iY0")
         model = genai.GenerativeModel(model_name = "gemini-1.5-flash")
@@ -182,7 +251,7 @@ def main():
     diccGlobal["botones"]["boton2"].pack()
     diccGlobal["botones"]["boton3"] = tk.Button(root, text="3. Mostrar Inventario", width=20)
     diccGlobal["botones"]["boton3"].pack()
-    diccGlobal["botones"]["boton4"] = tk.Button(root, text="4. Estadística * estado", width=20) #nunca se va a usar
+    diccGlobal["botones"]["boton4"] = tk.Button(root, text="4. Estadística por estado", width=20, command=obtenerEstadísticaPorEstado)
     diccGlobal["botones"]["boton4"].pack()
     diccGlobal["botones"]["boton5"] = tk.Button(root, text="5. Crear HTML", width=20)
     diccGlobal["botones"]["boton5"].pack()
