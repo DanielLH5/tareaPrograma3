@@ -109,7 +109,7 @@ def obtenerTextoAniLimpio(lineas):
 
 def limpiarTexto(texto): #Permite limpiar texto, permitiendo tildes y caracteres únicamente disponibles en el español.
     textoNorm = unicodedata.normalize('NFKD', texto) #Convierte letras con tildes o símbolos especiales a una forma descompuesta.
-    textoAscii = textoNorm.encode('ascii', 'ignore').decode('ascii') #Elimina caracteres que no admite ASCII y .decode('ascii') devuelve texto plano
+    textoAscii = textoNorm.encode('ascii', 'ignore').decode('ascii') #Elimina caracteres que no admite ASCII y .decode("ascii") devuelve texto plano.
     return textoAscii
 
 ##################################################
