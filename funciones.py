@@ -49,6 +49,38 @@ def cargarPickle(nombreArchivo):
         return []
 
 ##################################################
+# 4. Estadística por estado
+##################################################
+
+def obtenerPorcentajes(estadisticas):
+    pVivo = (estadisticas[0] / 20) * 100
+    pVivo = round(pVivo, 1)
+    pEnfermo = (estadisticas[1] / 20) * 100
+    pEnfermo = round(pEnfermo, 1)
+    pTranslado = (estadisticas[2] / 20) * 100
+    pTranslado = round(pTranslado, 1)
+    pMuertoEnMuseo = (estadisticas[3] / 20) * 100
+    pMuertoEnMuseo = round(pMuertoEnMuseo, 1)
+    pMuerto = (estadisticas[4] / 20) * 100
+    pMuerto = round(pMuerto, 1)
+    return (pVivo, pEnfermo, pTranslado, pMuertoEnMuseo, pMuerto)
+
+def obtenerCantidadPorEstado(estado, estados):
+    contador = 0
+    for info in estados:
+        if info[0] == estado:
+            contador += 1
+    return contador
+
+def contarEstadosAnimales(estados):
+    vivo = obtenerCantidadPorEstado(1, estados)
+    enfermo = obtenerCantidadPorEstado(2, estados)
+    translado = obtenerCantidadPorEstado(3, estados)
+    muertoEnMuseo = obtenerCantidadPorEstado(4, estados)
+    muerto = obtenerCantidadPorEstado(5, estados)
+    return (vivo, enfermo, translado, muertoEnMuseo, muerto)
+
+##################################################
 # 2. Crear inventario
 ##################################################
 

@@ -69,34 +69,6 @@ def ventanaAprobacion(comandoAceptar):
 # 4. Estadística por estado
 ##################################################
 
-def obtenerPorcentajes(estadisticas):
-    pVivo = (estadisticas[0] / 20) * 100
-    pVivo = round(pVivo, 1)
-    pEnfermo = (estadisticas[1] / 20) * 100
-    pEnfermo = round(pEnfermo, 1)
-    pTranslado = (estadisticas[2] / 20) * 100
-    pTranslado = round(pTranslado, 1)
-    pMuertoEnMuseo = (estadisticas[3] / 20) * 100
-    pMuertoEnMuseo = round(pMuertoEnMuseo, 1)
-    pMuerto = (estadisticas[4] / 20) * 100
-    pMuerto = round(pMuerto, 1)
-    return (pVivo, pEnfermo, pTranslado, pMuertoEnMuseo, pMuerto)
-
-def obtenerCantidadPorEstado(estado, estados):
-    contador = 0
-    for info in estados:
-        if info[0] == estado:
-            contador += 1
-    return contador
-
-def contarEstadosAnimales(estados):
-    vivo = obtenerCantidadPorEstado(1, estados)
-    enfermo = obtenerCantidadPorEstado(2, estados)
-    translado = obtenerCantidadPorEstado(3, estados)
-    muertoEnMuseo = obtenerCantidadPorEstado(4, estados)
-    muerto = obtenerCantidadPorEstado(5, estados)
-    return (vivo, enfermo, translado, muertoEnMuseo, muerto)
-
 def obtenerEstadísticaPorEstado():
     #('id', ('nombreColoquial', 'nombreCientifico'), 'url', [5, 1, 'c', 31.39])
     documento = cargarPickle(inventarioPkl)
@@ -112,21 +84,21 @@ def ventanaEstadisticaPorEstado(estadisticas, porcentajes):
     ventana = tk.Toplevel()
     ventana.title("Estadística por estado")
     ventana.geometry("350x200")
-    titulo = tk.Label(ventana, text="Estadística por estado", font=(14))
+    titulo = tk.Label(ventana, text="Estadística por estado", font=(14)) # font es tamaño de letra
     titulo.grid(row=0, column=0, pady=10)
-    #Encabezados
+    # Encabezados
     tk.Label(ventana, text="").grid(row=1, column=0)
     tk.Label(ventana, text="Cantidad").grid(row=1, column=1)
     tk.Label(ventana, text="Porcentaje").grid(row=1, column=2)
     estados = ["Vivo", "Enfermo", "Traslado", "Muerto en museo", "Muerto"]
     for i in range(len(estados)):
-        tk.Label(ventana, text=estados[i]).grid(row=i+2, column=0, sticky="w", padx=5)
+        tk.Label(ventana, text=estados[i]).grid(row=i+2, column=0, sticky="w", padx=5) # sticky="w" es pegado a la izquierda.
         tk.Entry(ventana, width=5).grid(row=i+2, column=1)
         tk.Entry(ventana, width=5).grid(row=i+2, column=2)
         # Insertar datos en los campos
         e1 = tk.Entry(ventana, width=5)
         e1.insert(0, estadisticas[i])
-        e1.config(state='readonly')
+        e1.config(state='readonly') # No se puede modificar este espacio
         e1.grid(row=i+2, column=1)
         e2 = tk.Entry(ventana, width=5)
         e2.insert(0, porcentajes[i])
