@@ -66,6 +66,19 @@ def ventanaAprobacion(comandoAceptar):
     botonRechazar.pack(pady=5)
 
 ##################################################
+# 5. Crear HTML
+##################################################
+
+def crearHTML():
+    documento = cargarPickle(inventarioPkl)
+    herNombrePeso = obtenerAnimalesPorDieta('h', documento)
+    carNombrePeso = obtenerAnimalesPorDieta('c', documento)
+    omnNombrePeso = obtenerAnimalesPorDieta('o', documento)
+    formato = formatoHTMLPesoDieta(herNombrePeso, carNombrePeso, omnNombrePeso)
+    with open(f"estadisticaPorOrden.html", "w", encoding="utf-8") as archivo:
+        archivo.write(formato)
+
+##################################################
 # 4. Estadística por estado
 ##################################################
 
@@ -225,7 +238,7 @@ def main():
     diccGlobal["botones"]["boton3"].pack()
     diccGlobal["botones"]["boton4"] = tk.Button(root, text="4. Estadística por estado", width=20, command=obtenerEstadísticaPorEstado)
     diccGlobal["botones"]["boton4"].pack()
-    diccGlobal["botones"]["boton5"] = tk.Button(root, text="5. Crear HTML", width=20)
+    diccGlobal["botones"]["boton5"] = tk.Button(root, text="5. Crear HTML", width=20, command=crearHTML)
     diccGlobal["botones"]["boton5"].pack()
     diccGlobal["botones"]["boton6"] = tk.Button(root, text="6. Generar PDF", width=20)
     diccGlobal["botones"]["boton6"].pack()

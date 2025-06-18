@@ -49,6 +49,117 @@ def cargarPickle(nombreArchivo):
         return []
 
 ##################################################
+# 5. Crear HTML
+##################################################
+
+def ordenarPorPeso(listaNombrePeso): # Este es el método de ordenamineto por burbuja.
+    n = len(listaNombrePeso)
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            # Comparar pesos (primer elemento de la tupla)
+            if listaNombrePeso[j][0] < listaNombrePeso[j + 1][0]:
+                # Intercambiar posiciones si está desordenado
+                listaNombrePeso[j], listaNombrePeso[j + 1] = listaNombrePeso[j + 1], listaNombrePeso[j]
+    print(listaNombrePeso)
+    return listaNombrePeso
+
+def obtenerPesoPorDieta(tipoAnimal, documento):
+    listaNombrePeso = []
+    for nombreAnimal in tipoAnimal:
+        for datoAnimal in documento:
+            nombres = datoAnimal.mostrarNombres()
+            nombreColoquial = nombres[0]
+            if nombreColoquial == nombreAnimal:
+                info = datoAnimal.mostrarInformacion()
+                peso = info[3]
+                informacionCadaAnimal = (peso, nombreColoquial)
+                listaNombrePeso.append(informacionCadaAnimal) #Nombre coloquial.
+    return ordenarPorPeso(listaNombrePeso)
+
+def obtenerAnimalesPorDieta(dieta, documento): #"h", "c" o "o"
+    listaAnimalesDieta = []
+    for animal in documento:
+        info = animal.mostrarInformacion()
+        if info[2] == dieta:
+            nombres = animal.mostrarNombres()
+            listaAnimalesDieta.append(nombres[0]) #Nombre coloquial.
+    return obtenerPesoPorDieta(listaAnimalesDieta, documento)
+    
+def formatoHTMLCategoria(categoria, listaNombrePeso):
+    filas = len(listaNombrePeso)
+    formato = f"""<!-- {categoria} -->
+        <tr><td class="orden" rowspan="{filas}">{categoria}</td><td>{listaNombrePeso[0][0]}</td><td>{listaNombrePeso[0][1]}</td></tr>\n"""  
+    for i in range(1, filas):
+        nuevaLinea = f"\t<tr><td>{listaNombrePeso[i][0]}</td><td>{listaNombrePeso[i][1]}</td></tr>\n"
+        formato += nuevaLinea
+    return formato
+    
+def formatoHTMLPesoDieta(herNombrePeso, carNombrePeso, omnNombrePeso):
+    formatoHer = formatoHTMLCategoria("Herbívoro", herNombrePeso)
+    formatoCar = formatoHTMLCategoria("Carnívoro", carNombrePeso)
+    formatoOmn = formatoHTMLCategoria("Omnívoro", omnNombrePeso)
+    formato = f"""<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Estadística por Orden</title>
+    <style>
+        body {{
+            font-family: Arial, sans-serif;
+            margin: 30px;
+        }}
+        h2 {{
+            text-align: center;
+        }}
+        table {{
+            border-collapse: collapse;
+            width: 60%;
+            margin: auto;
+        }}
+        th, td {{
+            border: 1px solid #333;
+            padding: 8px;
+            text-align: center;
+        }}
+        tr:nth-child(even) {{
+            background-color: #ffffff;
+        }}
+        tr:nth-child(odd) {{
+            background-color: #e9e9e9;
+        }}
+        .orden {{
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }}
+        .totales {{
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+        }}
+    </style>
+</head>
+<body>
+    <h2>Estadística por Orden</h2>
+    <table>
+        <tr>
+            <th>Orden</th>
+            <th>Peso</th>
+            <th>Nombre común</th>
+        </tr>
+        {formatoHer}
+        {formatoCar}
+        {formatoOmn}
+    </table>
+    <div class="totales">
+        Total de Herbívoros: {len(herNombrePeso)}<br>
+        Total de Carnívoros: {len(carNombrePeso)}<br>
+        Total de Omnívoros: {len(omnNombrePeso)}
+    </div>
+</body>
+</html>"""
+    return formato
+
+##################################################
 # 4. Estadística por estado
 ##################################################
 
