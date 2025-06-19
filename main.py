@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk, messagebox
 import random
 #python -m pip install wikipedia
 import wikipedia
@@ -64,6 +65,45 @@ def ventanaAprobacion(comandoAceptar):
     botonAceptar.pack(pady=5)
     botonRechazar = tk.Button(root, text="Rechazar", command=root.destroy)
     botonRechazar.pack(pady=5)
+
+##################################################
+# 5. Crear HTML
+##################################################
+
+def mostrarBPO():
+    seleccion = diccGlobal["seleccionVariable"].get()
+    print(seleccion)
+    if seleccion == "--Seleccionar--":
+        messagebox.showwarning("Aviso", "Por favor selecciona una opción.")
+    else:
+        messagebox.showinfo("Selección", f"Has seleccionado: {seleccion}")
+
+def limpiarBPO():
+    diccGlobal["seleccionVariable"].set("--Seleccionar--")
+
+def ventanaBusquedaPorOrden():
+    # Crear la ventana
+    ventana = tk.Toplevel(diccGlobal["root"])  # Ventana hija, no raíz
+    ventana.title("Mostrar por Orden")
+    ventana.geometry("300x200")
+    # Etiqueta título
+    titulo = tk.Label(ventana, text="Mostrar por Orden", font=("Arial", 12))
+    titulo.pack(pady=10)
+    # Frame para el menú
+    frame = tk.Frame(ventana)
+    frame.pack()
+    # Etiqueta y Combobox
+    tk.Label(frame, text="Orden").grid(row=0, column=0, padx=5, pady=5)
+    diccGlobal["seleccionVariable"] = tk.StringVar(value="--Seleccionar--")
+    selecciones = ttk.Combobox(frame, textvariable=diccGlobal["seleccionVariable"], state="readonly")
+    selecciones['values'] = ("--Seleccionar--", "Carnívoro", "Hervíboro", "Omnívoro")
+    selecciones.grid(row=0, column=1, padx=5, pady=5)
+    # Botones
+    botonFrame = tk.Frame(ventana)
+    botonFrame.pack(pady=10)
+    tk.Button(botonFrame, text="Mostrar", command=mostrarBPO).pack(side="left", padx=5)
+    tk.Button(botonFrame, text="Limpiar", command=limpiarBPO).pack(side="left", padx=5)
+    ventana.mainloop()
 
 ##################################################
 # 5. Crear HTML
@@ -229,7 +269,6 @@ def main():
     diccGlobal["root"] = root
     title = tk.Label(root, text="Zooinventario")
     title.pack()
-
     diccGlobal["botones"]["boton1"] = tk.Button(root, text="1. Obtener lista", width=20, command=ventanaObtenerLista)
     diccGlobal["botones"]["boton1"].pack()  
     diccGlobal["botones"]["boton2"] = tk.Button(root, text="2. Crear Inventario", width=20, command=crearInventarioDesdeTxt)
@@ -244,7 +283,7 @@ def main():
     diccGlobal["botones"]["boton6"].pack()
     diccGlobal["botones"]["boton7"] = tk.Button(root, text="7. Generar .csv", width=20)
     diccGlobal["botones"]["boton7"].pack()
-    diccGlobal["botones"]["boton8"] = tk.Button(root, text="8. Búsqueda por nombre", width=20)
+    diccGlobal["botones"]["boton8"] = tk.Button(root, text="8. Búsqueda por nombre", width=20, command=ventanaBusquedaPorOrden)
     diccGlobal["botones"]["boton8"].pack()
     root.mainloop()
 
