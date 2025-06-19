@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk, messagebox
 import random
 #python -m pip install wikipedia
 import wikipedia
@@ -66,14 +67,73 @@ def ventanaAprobacion(comandoAceptar):
     botonRechazar.pack(pady=5)
 
 ##################################################
+# 8. Búsqueda por orden
+##################################################
+
+def mostrarBPO():
+    seleccion = diccGlobal["seleccionVariable"].get()
+    documento = cargarPickle(inventarioPkl)
+    if seleccion == "--Seleccionar--":
+        messagebox.showwarning("Aviso", "Tiene que seleccionar una de las opciones.")
+    else:
+        if seleccion == "Hervíboro":
+            (listaHerbivoros, documento) = obtenerAnimalesPorDieta('h', documento)
+            matrizDatos = obtenerMatrizDatosBPO(listaHerbivoros, documento)
+            formato = formatoHTMLBPO("Hervíboros", matrizDatos)
+            with open(f"Hervíboros.html", "w", encoding="utf-8") as archivo:
+                archivo.write(formato)
+        if seleccion == "Carnívoro":
+            (listaCarnivoros, documento) = obtenerAnimalesPorDieta('c', documento)
+            matrizDatos = obtenerMatrizDatosBPO(listaCarnivoros, documento)
+            formato = formatoHTMLBPO("Carnívoros", matrizDatos)
+            with open(f"Carnívoros.html", "w", encoding="utf-8") as archivo:
+                archivo.write(formato)
+        if seleccion == "Omnívoro":
+            (listaOmnivoros, documento) = obtenerAnimalesPorDieta('o', documento)
+            matrizDatos = obtenerMatrizDatosBPO(listaOmnivoros, documento)
+            formato = formatoHTMLBPO("Omnívoros", matrizDatos)
+            with open(f"Omnívoros.html", "w", encoding="utf-8") as archivo:
+                archivo.write(formato)
+    
+def limpiarBPO():
+    diccGlobal["seleccionVariable"].set("--Seleccionar--")
+
+def ventanaBusquedaPorOrden():
+    # Crear la ventana
+    ventana = tk.Toplevel(diccGlobal["root"])  # Ventana hija, no raíz
+    ventana.title("Mostrar por Orden")
+    ventana.geometry("300x200")
+    # Etiqueta título
+    titulo = tk.Label(ventana, text="Mostrar por Orden", font=("Arial", 12))
+    titulo.pack(pady=10)
+    # Frame para el menú
+    frame = tk.Frame(ventana)
+    frame.pack()
+    # Etiqueta y Combobox
+    tk.Label(frame, text="Orden").grid(row=0, column=0, padx=5, pady=5)
+    diccGlobal["seleccionVariable"] = tk.StringVar(value="--Seleccionar--")
+    selecciones = ttk.Combobox(frame, textvariable=diccGlobal["seleccionVariable"], state="readonly")
+    selecciones['values'] = ("--Seleccionar--", "Carnívoro", "Hervíboro", "Omnívoro")
+    selecciones.grid(row=0, column=1, padx=5, pady=5)
+    # Botones
+    botonFrame = tk.Frame(ventana)
+    botonFrame.pack(pady=10)
+    tk.Button(botonFrame, text="Mostrar", command=mostrarBPO).pack(side="left", padx=5)
+    tk.Button(botonFrame, text="Limpiar", command=limpiarBPO).pack(side="left", padx=5)
+    ventana.mainloop()
+
+##################################################
 # 5. Crear HTML
 ##################################################
 
 def crearHTML():
     documento = cargarPickle(inventarioPkl)
-    herNombrePeso = obtenerAnimalesPorDieta('h', documento)
-    carNombrePeso = obtenerAnimalesPorDieta('c', documento)
-    omnNombrePeso = obtenerAnimalesPorDieta('o', documento)
+    (listaHerbivoros, documento) = obtenerAnimalesPorDieta('h', documento)
+    (listaCarnivoros, documento) = obtenerAnimalesPorDieta('c', documento)
+    (listaOmnivoros, documento) = obtenerAnimalesPorDieta('o', documento)
+    herNombrePeso = obtenerPesoPorDieta(listaHerbivoros, documento)
+    carNombrePeso = obtenerPesoPorDieta(listaCarnivoros, documento)
+    omnNombrePeso = obtenerPesoPorDieta(listaOmnivoros, documento)
     formato = formatoHTMLPesoDieta(herNombrePeso, carNombrePeso, omnNombrePeso)
     with open(f"estadisticaPorOrden.html", "w", encoding="utf-8") as archivo:
         archivo.write(formato)
@@ -229,7 +289,6 @@ def main():
     diccGlobal["root"] = root
     title = tk.Label(root, text="Zooinventario")
     title.pack()
-
     diccGlobal["botones"]["boton1"] = tk.Button(root, text="1. Obtener lista", width=20, command=ventanaObtenerLista)
     diccGlobal["botones"]["boton1"].pack()  
     diccGlobal["botones"]["boton2"] = tk.Button(root, text="2. Crear Inventario", width=20, command=crearInventarioDesdeTxt)
@@ -244,7 +303,7 @@ def main():
     diccGlobal["botones"]["boton6"].pack()
     diccGlobal["botones"]["boton7"] = tk.Button(root, text="7. Generar .csv", width=20)
     diccGlobal["botones"]["boton7"].pack()
-    diccGlobal["botones"]["boton8"] = tk.Button(root, text="8. Búsqueda por nombre", width=20)
+    diccGlobal["botones"]["boton8"] = tk.Button(root, text="8. Búsqueda por nombre", width=20, command=ventanaBusquedaPorOrden)
     diccGlobal["botones"]["boton8"].pack()
     root.mainloop()
 
