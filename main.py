@@ -67,17 +67,34 @@ def ventanaAprobacion(comandoAceptar):
     botonRechazar.pack(pady=5)
 
 ##################################################
-# 5. Crear HTML
+# 8. Búsqueda por orden
 ##################################################
 
 def mostrarBPO():
     seleccion = diccGlobal["seleccionVariable"].get()
-    print(seleccion)
+    documento = cargarPickle(inventarioPkl)
     if seleccion == "--Seleccionar--":
-        messagebox.showwarning("Aviso", "Por favor selecciona una opción.")
+        messagebox.showwarning("Aviso", "Tiene que seleccionar una de las opciones.")
     else:
-        messagebox.showinfo("Selección", f"Has seleccionado: {seleccion}")
-
+        if seleccion == "Hervíboro":
+            (listaHerbivoros, documento) = obtenerAnimalesPorDieta('h', documento)
+            matrizDatos = obtenerMatrizDatosBPO(listaHerbivoros, documento)
+            formato = formatoHTMLBPO("Hervíboros", matrizDatos)
+            with open(f"Hervíboros.html", "w", encoding="utf-8") as archivo:
+                archivo.write(formato)
+        if seleccion == "Carnívoro":
+            (listaCarnivoros, documento) = obtenerAnimalesPorDieta('c', documento)
+            matrizDatos = obtenerMatrizDatosBPO(listaCarnivoros, documento)
+            formato = formatoHTMLBPO("Carnívoros", matrizDatos)
+            with open(f"Carnívoros.html", "w", encoding="utf-8") as archivo:
+                archivo.write(formato)
+        if seleccion == "Omnívoro":
+            (listaOmnivoros, documento) = obtenerAnimalesPorDieta('o', documento)
+            matrizDatos = obtenerMatrizDatosBPO(listaOmnivoros, documento)
+            formato = formatoHTMLBPO("Omnívoros", matrizDatos)
+            with open(f"Omnívoros.html", "w", encoding="utf-8") as archivo:
+                archivo.write(formato)
+    
 def limpiarBPO():
     diccGlobal["seleccionVariable"].set("--Seleccionar--")
 
@@ -111,9 +128,12 @@ def ventanaBusquedaPorOrden():
 
 def crearHTML():
     documento = cargarPickle(inventarioPkl)
-    herNombrePeso = obtenerAnimalesPorDieta('h', documento)
-    carNombrePeso = obtenerAnimalesPorDieta('c', documento)
-    omnNombrePeso = obtenerAnimalesPorDieta('o', documento)
+    (listaHerbivoros, documento) = obtenerAnimalesPorDieta('h', documento)
+    (listaCarnivoros, documento) = obtenerAnimalesPorDieta('c', documento)
+    (listaOmnivoros, documento) = obtenerAnimalesPorDieta('o', documento)
+    herNombrePeso = obtenerPesoPorDieta(listaHerbivoros, documento)
+    carNombrePeso = obtenerPesoPorDieta(listaCarnivoros, documento)
+    omnNombrePeso = obtenerPesoPorDieta(listaOmnivoros, documento)
     formato = formatoHTMLPesoDieta(herNombrePeso, carNombrePeso, omnNombrePeso)
     with open(f"estadisticaPorOrden.html", "w", encoding="utf-8") as archivo:
         archivo.write(formato)

@@ -49,6 +49,107 @@ def cargarPickle(nombreArchivo):
         return []
 
 ##################################################
+# 8. Búsqueda por orden
+##################################################
+
+def formatoHTMLBPO(tituloDieta, matrizDatos):
+    contenido = f"""
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Animales {tituloDieta}</title>
+    <style>
+        body {{
+            font-family: Arial, sans-serif;
+        }}
+        .container {{
+            border: 2px solid #24465a;
+            border-radius: 30px;
+            padding: 10px 15px;
+            width: 850px;
+            margin: 20px auto;
+        }}
+        table {{
+            width: 100%;
+            border-collapse: collapse;
+        }}
+        caption {{
+            caption-side: top;
+            font-weight: normal;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }}
+        th, td {{
+            border: 1px solid black;
+            padding: 5px;
+            text-align: center;
+        }}
+        th {{
+            font-weight: bold;
+            font-style: italic;
+        }}
+        td img {{
+            max-width: 100px;
+        }}
+        /* Alternar colores de filas */
+        tbody tr:nth-child(odd) {{
+            background-color: #f2f2f2;
+        }}
+        tbody tr:nth-child(even) {{
+            background-color: #ffffff;
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <table>
+            <caption>Animales <span>{tituloDieta}</span></caption>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th><em>Código</em></th>
+                    <th><em>Nombre común</em></th>
+                    <th><em>Nombre Científico</em></th>
+                    <th><em>Foto</em></th>
+                </tr>
+            </thead>
+            <tbody>
+"""
+    for i, info in enumerate(matrizDatos, start=1):
+        contenido += f"""
+                <tr>
+                    <td>{i}</td>  <!-- Enumeración en la primera columna -->
+                    <td>{info[0]}</td>
+                    <td>{info[1]}</td>
+                    <td>{info[2]}</td>
+                    <td><img src="{info[3]}" alt="{info[1]}"></td>
+                </tr>
+"""
+    contenido += """
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+"""
+    return contenido
+
+def obtenerMatrizDatosBPO(listaPorDieta, documento):
+    matrizDatos = []
+    for nombreAnimal in listaPorDieta:
+        for datoAnimal in documento:
+            nombreColoquial = datoAnimal.mostrarNombres()[0]
+            if nombreColoquial == nombreAnimal:
+                id = datoAnimal.mostrarId()
+                nombreCientifico = datoAnimal.mostrarNombres()[1]
+                foto = datoAnimal.mostrarUrl()
+                informacionCadaAnimal = (id, nombreColoquial, nombreCientifico, foto)
+                matrizDatos.append(informacionCadaAnimal)
+    return matrizDatos
+
+##################################################
 # 5. Crear HTML
 ##################################################
 
@@ -73,7 +174,7 @@ def obtenerPesoPorDieta(tipoAnimal, documento):
                 info = datoAnimal.mostrarInformacion()
                 peso = info[3]
                 informacionCadaAnimal = (peso, nombreColoquial)
-                listaNombrePeso.append(informacionCadaAnimal) #Nombre coloquial.
+                listaNombrePeso.append(informacionCadaAnimal)
     return ordenarPorPeso(listaNombrePeso)
 
 def obtenerAnimalesPorDieta(dieta, documento): #"h", "c" o "o"
@@ -83,7 +184,7 @@ def obtenerAnimalesPorDieta(dieta, documento): #"h", "c" o "o"
         if info[2] == dieta:
             nombres = animal.mostrarNombres()
             listaAnimalesDieta.append(nombres[0]) #Nombre coloquial.
-    return obtenerPesoPorDieta(listaAnimalesDieta, documento)
+    return (listaAnimalesDieta, documento)
     
 def formatoHTMLCategoria(categoria, listaNombrePeso):
     filas = len(listaNombrePeso)
@@ -233,7 +334,7 @@ def obtenerDatosAnimalGemini(model, nombreComun):
 def peticionGeminiAnimales(numeroTotales, contenido):
     mensaje = (
         f"Genérame una lista de únicamnete {numeroTotales} animales distintos, asegurándote de que cada uno sea específico y único." +
-        f"Usa exclusivamente los animales mencionados en el siguiente texto de Wikipedia: {contenido}" +
+        f"Usa exclusivamente los animales mencionados en Wikipedia." +
         "Utiliza únicamente nombres comunes detallados (por ejemplo: 'Águila real', 'Zorro ártico', 'Delfín nariz de botella', 'Mariposa monarca')." +
         "No uses nombres genéricos como 'Águila', 'Zorro' o 'Mariposa'." +
         "Devuélvelos estrictamente en este formato: solo el nombre común, sin numeración ni negritas ni texto adicional." +

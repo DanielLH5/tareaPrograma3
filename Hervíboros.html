@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Animales Hervíboros</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            border: 2px solid #24465a;
+            border-radius: 30px;
+            padding: 10px 15px;
+            width: 850px;
+            margin: 20px auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        caption {
+            caption-side: top;
+            font-weight: normal;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: center;
+        }
+        th {
+            font-weight: bold;
+            font-style: italic;
+        }
+        td img {
+            max-width: 100px;
+        }
+        /* Alternar colores de filas */
+        tbody tr:nth-child(odd) {
+            background-color: #f2f2f2;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <table>
+            <caption>Animales <span>Hervíboros</span></caption>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th><em>Código</em></th>
+                    <th><em>Nombre común</em></th>
+                    <th><em>Nombre Científico</em></th>
+                    <th><em>Foto</em></th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr>
+                    <td>1</td>  <!-- Enumeración en la primera columna -->
+                    <td>co01</td>
+                    <td>Canguro rojo</td>
+                    <td>Macropus rufus</td>
+                    <td><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Red_Kangaroo_2.jpg/1280px-Red_Kangaroo_2.jpg" alt="Canguro rojo"></td>
+                </tr>
+
+                <tr>
+                    <td>2</td>  <!-- Enumeración en la primera columna -->
+                    <td>eo04</td>
+                    <td>Elefante africano</td>
+                    <td>Loxodonta africana</td>
+                    <td><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/African_Elephant_%28Loxodonta_africana%29.jpg/1280px-African_Elephant_%28Loxodonta_africana%29.jpg" alt="Elefante africano"></td>
+                </tr>
+
+                <tr>
+                    <td>3</td>  <!-- Enumeración en la primera columna -->
+                    <td>hn06</td>
+                    <td>Hipopotamo comun</td>
+                    <td>Hippopotamus amphibius</td>
+                    <td><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Hippopotamus_in_the_Chobe_National_Park%2C_Botswana.jpg/1280px-Hippopotamus_in_the_Chobe_National_Park%2C_Botswana.jpg" alt="Hipopotamo comun"></td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
