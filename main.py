@@ -5,6 +5,9 @@ import random
 import wikipedia
 #python -m pip install google-generativeai
 import google.generativeai as genai
+from PIL import Image, ImageTk
+import urllib.request
+import io
 
 from funciones import *
 
@@ -244,6 +247,87 @@ def ventanaEstadisticaPorEstado(estadisticas, porcentajes):
     ventana.mainloop()
     
 ##################################################
+# 3. Mostrar inventario
+##################################################
+
+simbolos = {2: "🚑", 3: "🚑", 4: "🏛️", 5: "💀"} #Me da TOC el museo que se hace a la izquierda.
+emojis = {2: "👍", 3: "🌟", 4: "😢", 5: "😠"}
+
+def mostrarInventario():
+    listaAnimales = cargarPickle("inventario.pkl")
+    indice = 0 
+    root = tk.Toplevel()
+    root.title("Inventario :3")
+    root.geometry("600x500")
+    root.resizable(False, False) #Desactiva la redimension
+    contenedor = tk.Frame(root)
+    contenedor.pack()
+    framesAnimales = []
+    def mostrarActuales():
+        nonlocal framesAnimales, indice #Reasigna la lista de frames definida en la función principal
+        for frame in framesAnimales:
+            frame.destroy()
+        framesAnimales = []
+        actuales = listaAnimales[indice:indice+4] #De donde esté, a tres mas
+        for idx, animal in enumerate(actuales):
+            fila = idx // 2
+            columna = idx % 2
+            frame = tk.Frame(contenedor, relief="ridge", borderwidth=2, padx=10, pady=10)
+            frame.grid(row=fila, column=columna, padx=10, pady=10)
+            framesAnimales.append(frame)
+            mostrarAnimal(frame, animal)
+    def mostrarAnimal(frame, animal):
+        id, (nombreComun, _), url, [estado, calificacion, _, _] = animal.indicarDatos() #_ para datos que no se usan
+        tk.Label(frame, text=nombreComun, font=("Arial", 10, "bold"), wraplength=150).pack(pady=2)
+        if estado == 1:
+            try:
+                with urllib.request.urlopen(url) as u:
+                    raw_data = u.read()
+                im = Image.open(io.BytesIO(raw_data))
+                im = im.resize((100, 100))
+                photo = ImageTk.PhotoImage(im)
+                lbl = tk.Label(frame, image=photo)
+                lbl.image = photo
+                lbl.pack()
+            except:
+                tk.Label(frame, text="Imagen en mantenimiento.").pack() #En caso de que no cargue la imagen
+        else:
+            simbolo = simbolos.get(estado, "?")
+            tk.Label(frame, text=simbolo, font=("Arial", 48)).pack()
+        botones = tk.Frame(frame)
+        botones.pack(pady=5)
+        for val, emoji in emojis.items():
+            estadoValido = ((val == 4 and estado in [2, 5]) or
+                            (val == 5 and estado == 3) or
+                            (val in [2, 3]))
+            b = tk.Button(botones, text=emoji, width=3, font=("Segoe UI Emoji", 14),
+                          command=lambda a=animal, v=val: calificarAnimal(a, v))
+            if not estadoValido:
+                b.config(state="disabled")
+            if val == calificacion:
+                b.config(relief="sunken")
+            b.pack(side="left")
+    def calificarAnimal(animal, valor):
+        animal.informacion[1] = valor
+        guardarPickle("inventario.pkl", listaAnimales)
+        mostrarActuales()
+    def mostrarSiguiente():
+        nonlocal indice #Se usa nonlocal para modificar "indice" que está en la función externa
+        if indice + 4 < len(listaAnimales):
+            indice += 4
+            mostrarActuales()
+    def mostrarAnterior():
+        nonlocal indice #Se usa nonlocal para modificar "indice" que está en la función externa
+        if indice - 4 >= 0:
+            indice -= 4
+            mostrarActuales()
+    nav = tk.Frame(root)
+    nav.pack(pady=10)
+    tk.Button(nav, text="<< Anterior", command=mostrarAnterior).pack(side="left")
+    tk.Button(nav, text="Siguiente >>", command=mostrarSiguiente).pack(side="left")
+    mostrarActuales()
+
+##################################################
 # 2. Crear inventario
 ##################################################
 
@@ -251,9 +335,9 @@ def crearObjetosAnimal(listaNombres):
     genai.configure(api_key="AIzaSyCj7ewGgJ0c7Cb_nHrHfzkN4lGDFlZ_iY0")
     model = genai.GenerativeModel(model_name="gemini-1.5-flash")
     animales = []
-    consecutivo = 1 #Para no generar consecutivos erroneos
+    consecutivo = 1
     for nombre in listaNombres:
-        nombreCientifico, tipo, url = obtenerDatosAnimalGemini(model, nombre)
+        nombreCientifico, tipo, url = obtenerDatosAnimal(nombre, model)
         estado = random.randint(1, 5)
         calificacion = 1
         if "carn" in tipo:
@@ -273,17 +357,17 @@ def crearObjetosAnimal(listaNombres):
         a.asignarUrl(url)
         a.asignarInformacion([estado, calificacion, tipoAlimenticio, round(peso, 2)])
         animales.append(a)
-        consecutivo += 1 #Para no generar consecutivos repetidos
-    return animales #Devuelve lista con los animales
+        consecutivo += 1
+    return animales
 
 def crearInventarioDesdeTxt():
-    nombresSeleccionados = seleccionarAnimalesAleatorios("Animales", 20) #Genera 20 por indicaciones en la TP
-    listaObjetos = crearObjetosAnimal(nombresSeleccionados) #Genera la lista con los objetos
-    print("\nObjetos creados:") #Print temporal en terminal
+    nombresSeleccionados = seleccionarAnimalesAleatorios("Animales", 20)
+    listaObjetos = crearObjetosAnimal(nombresSeleccionados)
+    print("\nObjetos creados:")
     for animal in listaObjetos:
         print(animal.indicarDatos())
-    guardarPickle(inventarioPkl, listaObjetos)
-    ventanaConfirmacion("Inventario creado y guardado con éxito en inventario.pkl.") #Guarda en pickle
+    guardarPickle("inventario.pkl", listaObjetos)
+    ventanaConfirmacion("Inventario creado y guardado con éxito en inventario.pkl.")
     return listaObjetos
 
 ##################################################
@@ -385,7 +469,7 @@ def main():
     diccGlobal["botones"]["boton1"].pack()  
     diccGlobal["botones"]["boton2"] = tk.Button(root, text="2. Crear Inventario", width=20, command=crearInventarioDesdeTxt)
     diccGlobal["botones"]["boton2"].pack()
-    diccGlobal["botones"]["boton3"] = tk.Button(root, text="3. Mostrar Inventario", width=20)
+    diccGlobal["botones"]["boton3"] = tk.Button(root, text="3. Mostrar Inventario", width=20, command=mostrarInventario)
     diccGlobal["botones"]["boton3"].pack()
     diccGlobal["botones"]["boton4"] = tk.Button(root, text="4. Estadística por estado", width=20, command=obtenerEstadísticaPorEstado)
     diccGlobal["botones"]["boton4"].pack()
@@ -395,7 +479,7 @@ def main():
     diccGlobal["botones"]["boton6"].pack()
     diccGlobal["botones"]["boton7"] = tk.Button(root, text="7. Generar .csv", width=20)
     diccGlobal["botones"]["boton7"].pack()
-    diccGlobal["botones"]["boton8"] = tk.Button(root, text="8. Búsqueda por nombre", width=20, command=ventanaBusquedaPorOrden)
+    diccGlobal["botones"]["boton8"] = tk.Button(root, text="8. Búsqueda por orden", width=20, command=ventanaBusquedaPorOrden)
     diccGlobal["botones"]["boton8"].pack()
     root.mainloop()
 

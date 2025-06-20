@@ -1,6 +1,8 @@
 import unicodedata
 import pickle
 import random
+import wikipedia
+import google.generativeai as genai
 
 ##################################################
 #Funciones de manipulación de datos
@@ -412,14 +414,37 @@ def generarId(nombre, consecutivo): #Generar id único del nombre
     nombre = nombre.lower()
     primera = nombre[0]
     ultima = nombre[-1]
-    return f"{primera}{ultima}{consecutivo:02d}" #Devuelve primer, última letra y consecutivo con dos dígitos
+    return f"{primera}{ultima}{consecutivo:02d}"
 
-def obtenerDatosAnimalGemini(model, nombreComun):
-    #Prompt utilizado para generar los datos del animal
-    prompt = (
-        f"Dame el nombre científico, el tipo de alimentación (solo responde 'carnívoro', 'herbívoro' u 'omnívoro') "
-        f"y una URL de imagen del animal '{nombreComun}'. No uses viñetas ni encabezados. Responde separado por saltos de línea.")
+def obtenerDatosAnimalWikipedia(nombreComun):
     try:
+        wikipedia.set_lang("es")
+        page = wikipedia.page(nombreComun)
+        resumen = wikipedia.summary(nombreComun, sentences=2).lower()
+        imagenValida = ""
+        for img in page.images: #Recorre todas las URLs de imágenes que encontró Wikipedia
+            #Filtra para evitar imágenes que sean logos o imágenes en formato .svg
+            if not any(excluido in img for excluido in ["commons-logo", "wikimedia-logo", ".svg"]):
+                imagenValida = img
+                break
+        tipo = "omnívoro" #De base que sea omnívoro
+        if "herbívor" in resumen:
+            tipo = "herbívoro"
+        elif "carnívor" in resumen:
+            tipo = "carnívoro"
+        return nombreComun, tipo, imagenValida
+    except:
+        return "desconocido", "omnívoro", ""
+
+def obtenerDatosAnimal(nombreComun, model):
+    nombreCientifico, tipoAlimentacion, urlImagen = obtenerDatosAnimalWikipedia(nombreComun) #Buscar de wikipedia
+    if urlImagen:
+        return nombreCientifico, tipoAlimentacion, urlImagen
+    try:#En caso de que Wikipedia falle, se piden los datos a gemini
+        #Prompt a utilizar con Gemini
+        prompt = (
+            f"Dame el nombre científico, el tipo de alimentación (solo responde 'carnívoro', 'herbívoro' u 'omnívoro') "
+            f"y una URL de imagen del animal '{nombreComun}'. No uses viñetas ni encabezados. Responde separado por saltos de línea.")
         response = model.generate_content(prompt)
         datos = response.text.strip().split("\n")
         nombreCientifico = datos[0].strip()
@@ -427,7 +452,7 @@ def obtenerDatosAnimalGemini(model, nombreComun):
         urlImagen = datos[2].strip()
         return nombreCientifico, tipoAlimentacion, urlImagen
     except Exception as e:
-        print(f"Error al obtener datos de {nombreComun}: {e}") #Puede dar error por límite de cuotas de Gemini
+        print(f"Error al obtener datos de {nombreComun} con Gemini: {e}")
         return "desconocido", "omnívoro", ""
 
 ##################################################
