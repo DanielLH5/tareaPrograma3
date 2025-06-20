@@ -53,6 +53,18 @@ def cargarPickle(nombreArchivo):
 ##################################################
 
 def formatoHTMLBPO(tituloDieta, matrizDatos):
+    """
+    Funcionamiento:
+    Genera una plantilla HTML que contiene una tabla con información sobre animales
+    pertenecientes a una dieta específica (por ejemplo, hervíboros, carnívoros u omnívoros).
+    Cada fila incluye un número de orden, código, nombre común, nombre científico y una imagen.
+    Entradas:
+    - tituloDieta (str): título descriptivo de la dieta (por ejemplo: "Carnívoros").
+    - matrizDatos (list): lista de tuplas con los datos de cada animal en el formato:
+    (id, nombre_col, nombre_cient, url_foto)
+    Salidas:
+    - contenido (str): código HTML generado como string listo para ser guardado en un archivo.
+    """
     contenido = f"""
 <!DOCTYPE html>
 <html lang="es">
@@ -137,6 +149,18 @@ def formatoHTMLBPO(tituloDieta, matrizDatos):
     return contenido
 
 def obtenerMatrizDatosBPO(listaPorDieta, documento):
+    """
+    Funcionamiento:
+    Extrae de un documento (lista de objetos animal) los datos necesarios de los animales
+    que están incluidos en una lista por dieta específica. Extrae: ID, nombre común, nombre
+    científico y URL de la imagen.
+    Entradas:
+    - listaPorDieta (list): lista de nombres comunes de animales filtrados por dieta.
+    - documento (list): lista de objetos (presumiblemente de tipo 'Animal') con sus métodos internos.
+    Salidas:
+    - matrizDatos (list): lista de tuplas con la información completa:
+    (id, nombre común, nombre científico, url)
+    """
     matrizDatos = []
     for nombreAnimal in listaPorDieta:
         for datoAnimal in documento:
@@ -154,6 +178,15 @@ def obtenerMatrizDatosBPO(listaPorDieta, documento):
 ##################################################
 
 def ordenarPorPeso(listaNombrePeso): # Este es el método de ordenamineto por burbuja.
+    """
+    Funcionamiento:
+    Ordena una lista de tuplas (peso, nombre) de forma descendente usando el algoritmo de burbuja,
+    comparando por el valor del peso.
+    Entradas:
+    - listaNombrePeso (list[tuple[float, str]]): Lista de tuplas donde cada una contiene el peso y nombre del animal.
+    Salidas:
+    - list[tuple[float, str]]: Lista ordenada de mayor a menor peso.
+    """
     n = len(listaNombrePeso)
     for i in range(n):
         for j in range(0, n - i - 1):
@@ -165,6 +198,16 @@ def ordenarPorPeso(listaNombrePeso): # Este es el método de ordenamineto por bu
     return listaNombrePeso
 
 def obtenerPesoPorDieta(tipoAnimal, documento):
+    """
+    Funcionamiento:
+    Busca los pesos de los animales en el inventario que coincidan con los nombres proporcionados y 
+    devuelve una lista de tuplas (peso, nombre) ordenada de forma descendente por peso.
+    Entradas:
+    - tipoAnimal (list[str]): Lista de nombres coloquiales de los animales de una dieta específica.
+    - documento (list[objeto]): Lista de objetos del inventario cargado.
+    Salidas:
+    - list[tuple[float, str]]: Lista ordenada de tuplas (peso, nombre).
+    """
     listaNombrePeso = []
     for nombreAnimal in tipoAnimal:
         for datoAnimal in documento:
@@ -178,6 +221,17 @@ def obtenerPesoPorDieta(tipoAnimal, documento):
     return ordenarPorPeso(listaNombrePeso)
 
 def obtenerAnimalesPorDieta(dieta, documento): #"h", "c" o "o"
+    """
+    Funcionamiento:
+    Filtra y devuelve una lista de nombres coloquiales de animales que tienen una dieta específica.
+    Entradas:
+    - dieta (str): Tipo de dieta ('h' = herbívoro, 'c' = carnívoro, 'o' = omnívoro).
+    - documento (list[objeto]): Lista de objetos del inventario cargado.
+    Salidas:
+    - tuple: (listaAnimalesDieta, documento)
+        - listaAnimalesDieta (list[str]): Lista de nombres coloquiales de animales con la dieta indicada.
+        - documento (list[objeto]): Documento original (retornado sin cambios).
+    """
     listaAnimalesDieta = []
     for animal in documento:
         info = animal.mostrarInformacion()
@@ -187,6 +241,16 @@ def obtenerAnimalesPorDieta(dieta, documento): #"h", "c" o "o"
     return (listaAnimalesDieta, documento)
     
 def formatoHTMLCategoria(categoria, listaNombrePeso):
+    """
+    Funcionamiento:
+    Genera el bloque HTML con filas de una tabla para una categoría de dieta específica 
+    (herbívoros, carnívoros u omnívoros), usando la lista de tuplas (peso, nombre).
+    Entradas:
+    - categoria (str): Nombre de la categoría ("Herbívoro", "Carnívoro", "Omnívoro").
+    - listaNombrePeso (list[tuple[float, str]]): Lista de tuplas con peso y nombre.
+    Salidas:
+    - str: Bloque de texto HTML con las filas correspondientes a esa categoría.
+    """
     filas = len(listaNombrePeso)
     formato = f"""<!-- {categoria} -->
         <tr><td class="orden" rowspan="{filas}">{categoria}</td><td>{listaNombrePeso[0][0]}</td><td>{listaNombrePeso[0][1]}</td></tr>\n"""  
@@ -196,6 +260,17 @@ def formatoHTMLCategoria(categoria, listaNombrePeso):
     return formato
     
 def formatoHTMLPesoDieta(herNombrePeso, carNombrePeso, omnNombrePeso):
+    """
+    Funcionamiento:
+    Une los bloques de HTML de las tres categorías (herbívoros, carnívoros y omnívoros) y arma
+    una página HTML completa con estilos y una tabla que muestra peso y nombre común.
+    Entradas:
+    - herNombrePeso (list[tuple[float, str]]): Lista de herbívoros.
+    - carNombrePeso (list[tuple[float, str]]): Lista de carnívoros.
+    - omnNombrePeso (list[tuple[float, str]]): Lista de omnívoros.
+    Salidas:
+    - str: Texto HTML completo como string.
+    """
     formatoHer = formatoHTMLCategoria("Herbívoro", herNombrePeso)
     formatoCar = formatoHTMLCategoria("Carnívoro", carNombrePeso)
     formatoOmn = formatoHTMLCategoria("Omnívoro", omnNombrePeso)
@@ -265,6 +340,16 @@ def formatoHTMLPesoDieta(herNombrePeso, carNombrePeso, omnNombrePeso):
 ##################################################
 
 def obtenerPorcentajes(estadisticas):
+    """
+    Funcionamiento:
+    Calcula el porcentaje de animales en cada uno de los cinco estados con respecto a un total de 20 animales.
+    Redondea cada porcentaje a un decimal.
+    Entradas:
+    - estadisticas (tuple[int]): Tupla con 5 valores enteros representando la cantidad de animales en cada estado:
+    (vivo, enfermo, en translado, muerto en museo, muerto)
+    Salidas:
+    - tuple[float]: Porcentajes de cada estado en el mismo orden, redondeados a un decimal.
+    """
     pVivo = (estadisticas[0] / 20) * 100
     pVivo = round(pVivo, 1)
     pEnfermo = (estadisticas[1] / 20) * 100
@@ -278,6 +363,15 @@ def obtenerPorcentajes(estadisticas):
     return (pVivo, pEnfermo, pTranslado, pMuertoEnMuseo, pMuerto)
 
 def obtenerCantidadPorEstado(estado, estados):
+    """
+    Funcionamiento:
+    Cuenta cuántos animales se encuentran en un estado específico dentro de una lista de estados.
+    Entradas:
+    - estado (int): Número que representa un estado específico (1 = vivo, 2 = enfermo...).
+    - estados (list[tuple]): Lista de tuplas donde el primer valor indica el estado del animal.
+    Salidas:
+    - contador (int): Cantidad de animales que están en el estado especificado.
+    """
     contador = 0
     for info in estados:
         if info[0] == estado:
@@ -285,6 +379,15 @@ def obtenerCantidadPorEstado(estado, estados):
     return contador
 
 def contarEstadosAnimales(estados):
+    """
+    Funcionamiento:
+    Cuenta cuántos animales hay en cada uno de los 5 estados posibles utilizando la función obtenerCantidadPorEstado.
+    Entradas:
+    - estados (list[tuple]): Lista de tuplas donde el primer elemento representa el estado de cada animal.
+    Salidas:
+    - tuple[int]: Tupla con la cantidad de animales por estado en el siguiente orden:
+    (vivo, enfermo, en translado, muerto en museo, muerto)
+    """
     vivo = obtenerCantidadPorEstado(1, estados)
     enfermo = obtenerCantidadPorEstado(2, estados)
     translado = obtenerCantidadPorEstado(3, estados)
@@ -332,6 +435,16 @@ def obtenerDatosAnimalGemini(model, nombreComun):
 ##################################################
 
 def peticionGeminiAnimales(numeroTotales, contenido):
+    """
+    Funcionamiento:
+    Genera un mensaje estructurado para enviar a la API de Gemini. Este mensaje solicita una lista
+    específica de animales únicos y detallados, exclusivamente basada en información de Wikipedia.
+    Entradas:
+    - numeroTotales (int): Número de animales que se desea generar.
+    - contenido (str): Texto resumido extraído de Wikipedia sobre animales.
+    Salidas:
+    - mensaje (str): Prompt listo para enviar al modelo de lenguaje.
+    """
     mensaje = (
         f"Genérame una lista de únicamnete {numeroTotales} animales distintos, asegurándote de que cada uno sea específico y único." +
         f"Usa exclusivamente los animales mencionados en Wikipedia." +
@@ -342,6 +455,15 @@ def peticionGeminiAnimales(numeroTotales, contenido):
     return mensaje
 
 def obtenerTextoAniLimpio(lineas):
+    """
+    Funcionamiento:
+    Procesa una lista de líneas de texto, eliminando espacios en blanco innecesarios y omitiendo líneas vacías.
+    Une el contenido limpio en un solo string separado por saltos de línea.
+    Entradas:
+    - lineas (list[str]): Lista de líneas de texto.
+    Salidas:
+    - resultadoLimpio (str): Texto depurado y unido, una línea por animal.
+    """
     listaAnimales = []
     for linea in lineas:
         lineaLimpia = linea.strip()
@@ -352,6 +474,15 @@ def obtenerTextoAniLimpio(lineas):
     return resultadoLimpio
 
 def limpiarTexto(texto): #Permite limpiar texto, permitiendo tildes y caracteres únicamente disponibles en el español.
+    """
+    Funcionamiento:
+    Limpia un texto eliminando caracteres especiales o con tildes, convirtiéndolos a su forma básica (ASCII).
+    Esto permite un procesamiento posterior más limpio y compatible.
+    Entradas:
+    - texto (str): Texto original, posiblemente con tildes o símbolos del idioma español.
+    Salidas:
+    - textoAscii (str): Texto limpio solo con caracteres ASCII.
+    """
     textoNorm = unicodedata.normalize('NFKD', texto) #Convierte letras con tildes o símbolos especiales a una forma descompuesta.
     textoAscii = textoNorm.encode('ascii', 'ignore').decode('ascii') #Elimina caracteres que no admite ASCII y .decode("ascii") devuelve texto plano.
     return textoAscii

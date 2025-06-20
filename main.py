@@ -71,34 +71,68 @@ def ventanaAprobacion(comandoAceptar):
 ##################################################
 
 def mostrarBPO():
+    """
+    Funcionamiento:
+    Dependiendo de la opción seleccionada en el menú desplegable (herbívoro, carnívoro, omnívoro),
+    genera un archivo HTML que muestra una tabla con los animales de esa categoría, utilizando los datos
+    del archivo inventarioPkl.
+    Entradas:
+    - No tiene parámetros de entrada explícitos.
+    - Utiliza diccGlobal["seleccionVariable"] para saber qué categoría fue seleccionada.
+    Salidas:
+    - Genera un archivo HTML con la información correspondiente.
+    - Si no se selecciona ninguna opción válida, muestra una ventana de retroalimentación con un mensaje de advertencia.
+    """
     seleccion = diccGlobal["seleccionVariable"].get()
     documento = cargarPickle(inventarioPkl)
     if seleccion == "--Seleccionar--":
-        messagebox.showwarning("Aviso", "Tiene que seleccionar una de las opciones.")
+        mensaje = "Tiene que seleccionar una de las opciones."
+        ventanaRetroalimentacion(mensaje)
     else:
         if seleccion == "Hervíboro":
             (listaHerbivoros, documento) = obtenerAnimalesPorDieta('h', documento)
             matrizDatos = obtenerMatrizDatosBPO(listaHerbivoros, documento)
             formato = formatoHTMLBPO("Hervíboros", matrizDatos)
-            with open(f"Hervíboros.html", "w", encoding="utf-8") as archivo:
+            with open(f"animalesHervíboros.html", "w", encoding="utf-8") as archivo:
                 archivo.write(formato)
+            ventanaConfirmacion("Se ha creado exitosamente el archivo animalesHervíboros.html")
         if seleccion == "Carnívoro":
             (listaCarnivoros, documento) = obtenerAnimalesPorDieta('c', documento)
             matrizDatos = obtenerMatrizDatosBPO(listaCarnivoros, documento)
             formato = formatoHTMLBPO("Carnívoros", matrizDatos)
-            with open(f"Carnívoros.html", "w", encoding="utf-8") as archivo:
+            with open(f"animalesCarnívoros.html", "w", encoding="utf-8") as archivo:
                 archivo.write(formato)
+            ventanaConfirmacion("Se ha creado exitosamente el archivo animalesCarnívoros.html")
         if seleccion == "Omnívoro":
             (listaOmnivoros, documento) = obtenerAnimalesPorDieta('o', documento)
             matrizDatos = obtenerMatrizDatosBPO(listaOmnivoros, documento)
             formato = formatoHTMLBPO("Omnívoros", matrizDatos)
-            with open(f"Omnívoros.html", "w", encoding="utf-8") as archivo:
+            with open(f"animalesOmnívoros.html", "w", encoding="utf-8") as archivo:
                 archivo.write(formato)
+            ventanaConfirmacion("Se ha creado exitosamente el archivo animalesOmnívoros.html")
     
 def limpiarBPO():
+    """
+    Funcionamiento:
+    Restablece la opción del menú desplegable a su valor por defecto ("--Seleccionar--").
+    Entradas:
+    - NA.
+    Salidas:
+    - NA.
+    """
     diccGlobal["seleccionVariable"].set("--Seleccionar--")
 
 def ventanaBusquedaPorOrden():
+    """
+    Funcionamiento:
+    Crea una nueva ventana emergente que permite al usuario seleccionar una categoría de animales
+    según su tipo de dieta ("Carnívoro", "Hervíboro", "Omnívoro") y generar un archivo HTML con los datos.
+    Incluye un menú desplegable para seleccionar la categoría y dos botones: "Mostrar" y "Limpiar".
+    Entradas:
+    - NA.
+    Salidas:
+    - Ventana interactiva con un menú y botones.
+    """
     # Crear la ventana
     ventana = tk.Toplevel(diccGlobal["root"])  # Ventana hija, no raíz
     ventana.title("Mostrar por Orden")
@@ -127,6 +161,16 @@ def ventanaBusquedaPorOrden():
 ##################################################
 
 def crearHTML():
+    """
+    Funcionamiento:
+    Genera un archivo HTML que muestra una tabla con los animales ordenados por tipo de dieta 
+    (herbívoros, carnívoros, omnívoros) y ordenados por peso de forma descendente.
+    Utiliza funciones auxiliares para filtrar, ordenar y dar formato a los datos.
+    Entradas:
+    - NA
+    Salidas:
+    - Crea el archivo "estadisticaPorOrden.html" con la tabla generada.
+    """
     documento = cargarPickle(inventarioPkl)
     (listaHerbivoros, documento) = obtenerAnimalesPorDieta('h', documento)
     (listaCarnivoros, documento) = obtenerAnimalesPorDieta('c', documento)
@@ -137,13 +181,23 @@ def crearHTML():
     formato = formatoHTMLPesoDieta(herNombrePeso, carNombrePeso, omnNombrePeso)
     with open(f"estadisticaPorOrden.html", "w", encoding="utf-8") as archivo:
         archivo.write(formato)
+    mensaje = "Se ha creado exitosamente el archivo estadisticaPorOrden.html."
+    ventanaConfirmacion(mensaje)
 
 ##################################################
 # 4. Estadística por estado
 ##################################################
 
 def obtenerEstadísticaPorEstado():
-    #('id', ('nombreColoquial', 'nombreCientifico'), 'url', [5, 1, 'c', 31.39])
+    """
+    Funcionamiento:
+    Recupera la información del inventario desde un archivo .pkl, extrae los estados de todos los animales,
+    calcula estadísticas y porcentajes por estado, y finalmente muestra esta información en una ventana gráfica.
+    Entradas:
+    - NA.
+    Salidas:
+    - Muestra la ventana generada por ventanaEstadisticaPorEstado.
+    """
     documento = cargarPickle(inventarioPkl)
     estados = []
     for animal in documento:
@@ -154,6 +208,16 @@ def obtenerEstadísticaPorEstado():
     return ventanaEstadisticaPorEstado(estadisticas, porcentajes)
     
 def ventanaEstadisticaPorEstado(estadisticas, porcentajes):
+    """
+    Funcionamiento:
+    Crea una ventana emergente que muestra en forma tabular la cantidad y el porcentaje de animales
+    en cada uno de los 5 estados: Vivo, Enfermo, Traslado, Muerto en museo, y Muerto.
+    Entradas:
+    - estadisticas (tuple[int]): Cantidad de animales por estado.
+    - porcentajes (tuple[float]): Porcentaje de animales por estado (basado en un total de 20).
+    Salidas:
+    - NA.
+    """
     ventana = tk.Toplevel()
     ventana.title("Estadística por estado")
     ventana.geometry("350x200")
@@ -219,7 +283,7 @@ def crearInventarioDesdeTxt():
     for animal in listaObjetos:
         print(animal.indicarDatos())
     guardarPickle(inventarioPkl, listaObjetos)
-    ventanaConfirmacion("Inventario creado y guardado con éxito en 'inventario.pkl'.") #Guarda en pickle
+    ventanaConfirmacion("Inventario creado y guardado con éxito en inventario.pkl.") #Guarda en pickle
     return listaObjetos
 
 ##################################################
@@ -227,6 +291,15 @@ def crearInventarioDesdeTxt():
 ##################################################
 
 def obtenerLista(numeroTotales):
+    """
+    Funcionamiento:
+    Obtiene una lista de animales desde Wikipedia, solicita a la API de Gemini que genere nombres específicos de animales,
+    limpia el texto recibido y lo guarda en un archivo de texto. Muestra una ventana de confirmación al finalizar.
+    Entradas:
+    - numeroTotales (int): Cantidad de animales que se desea obtener.
+    Salidas:
+    - NA.
+    """
     try:
         # Configurar Wikipedia
         wikipedia.set_lang("es")
@@ -247,6 +320,16 @@ def obtenerLista(numeroTotales):
         print(f"Ha ocurrido un error con: {e}")
 
 def validarObtenerLista(numeroTotales):
+    """
+    Funcionamiento:
+    Valida que el valor ingresado sea numérico y mayor o igual a 20. Si cumple con los requisitos,
+    llama a la función obtenerLista. Si no, muestra un mensaje de retroalimentación.
+    Entradas:
+    - numeroTotales (str): Valor ingresado por el usuario como string.
+    Salidas:
+    - Llama a obtenerLista(numeroTotales) si es válido.
+    - Muestra retroalimentación si no es válido.
+    """
     if not numeroTotales.isdigit():
         mensaje = "El valor tiene que ser un valor numérico."
         return ventanaRetroalimentacion(mensaje)
@@ -258,6 +341,15 @@ def validarObtenerLista(numeroTotales):
         return obtenerLista(numeroTotales)
 
 def ventanaObtenerLista():
+    """
+    Funcionamiento:
+    Crea una ventana emergente con una interfaz gráfica que permite al usuario ingresar
+    un número para especificar cuántos animales desea obtener. El botón "Buscar" valida ese número.
+    Entradas:
+    - NA.
+    Salidas:
+    - NA (la función invoca otras funciones en base a la interacción del usuario).
+    """
     search = tk.Toplevel()
     search.title("Obtener animales")
     search.geometry("300x200")
