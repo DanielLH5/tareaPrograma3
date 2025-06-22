@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 import random
+from fpdf import FPDF
+import csv
 #python -m pip install wikipedia
 import wikipedia
 #python -m pip install google-generativeai
@@ -160,6 +162,74 @@ def ventanaBusquedaPorOrden():
     ventana.mainloop()
 
 ##################################################
+# 7. Crear CSV
+##################################################
+
+def exportarAnimalesACSV():
+    """
+    Funcionamiento:
+    Genera un CSV con toos los datos de los animales.
+    Entradas:
+    - NA
+    Salidas:
+    - Retroalimentación de la creación del CSV.
+    """
+    animales = cargarPickle("inventario.pkl")
+    rutaArchivo="inventario.csv"
+    with open(rutaArchivo, mode="w", encoding="utf-8", newline="") as archivo:
+        writer = csv.writer(archivo)
+        #Encabezados de columnas
+        writer.writerow(["ID", "Nombre común", "Nombre científico",  "URL imagen", 
+            "Estado", "Calificación", "Tipo alimenticio", "Peso"])
+        for animal in animales: #Escribe dstos de cada animal
+            id, (nombreComun, nombreCientifico), url, info = animal.indicarDatos()
+            estado, calificacion, tipoAlimenticio, peso = info
+            writer.writerow([
+                id, nombreComun, nombreCientifico, 
+                url, estado, calificacion, 
+                tipoAlimenticio, peso])
+    ventanaConfirmacion("Se ha creado exitosamente el archivo inventario.csv")
+
+##################################################
+# 6. Crear PDF
+##################################################
+    
+def generarEstadisticasPdf():
+    """
+    Funcionamiento:
+    Genera un PDF con estaísticas de las calificaciones que tengan los animales
+    Entradas:
+    - NA
+    Salidas:
+    - Llama a la función agregarSeccion por cada grupo de animales que pertenezcan a X calificación.
+    - Retroalimentación de la creación del PDF.
+    """
+    animales = cargarPickle("inventario.pkl")
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", "B", 14)
+    pdf.cell(0, 10, "Estadística por Calificación", ln=True, align="C")
+    pdf.ln(5)
+    calificaciones = {1: ("No marcado", False), 2: ("Me gusta", False),
+        3: ("Favorito", False), 4: ("Me entristece", True), 5: ("Me enoja", True)}
+    totales = {}
+    for valor, (titulo, necesitaEstado) in calificaciones.items():
+        grupo = [] #Lista vacía para guardar animales con la calificación que se ocupa
+        for a in animales:
+            calificacion = a.informacion[1] #Obtener la calificación del animal
+            if calificacion == valor:
+                grupo.append(a)
+        agregarSeccion(pdf, titulo, grupo, incluirEstado=necesitaEstado) #Agregar los grupos al PDF
+        totales[titulo] = len(grupo)
+    pdf.set_font("Arial", "B", 12)
+    pdf.cell(0, 10, "Totales:", ln=True)
+    pdf.set_font("Arial", "", 10)
+    for nombre, cantidad in totales.items():
+        pdf.cell(0, 8, f"{nombre}: {cantidad}", ln=True)
+    pdf.output("estadisticas.pdf")
+    ventanaConfirmacion("Se ha creado exitosamente el archivo estadisticas.pdf")
+
+##################################################
 # 5. Crear HTML
 ##################################################
 
@@ -250,10 +320,18 @@ def ventanaEstadisticaPorEstado(estadisticas, porcentajes):
 # 3. Mostrar inventario
 ##################################################
 
-simbolos = {2: "🚑", 3: "🚑", 4: "🏛️", 5: "💀"} #Me da TOC el museo que se hace a la izquierda.
-emojis = {2: "👍", 3: "🌟", 4: "😢", 5: "😠"}
-
 def mostrarInventario():
+    """
+    Funcionamiento:
+    Muestra el inventario en una ventana 2x2, con opción de avanzar o retroceder.
+    Función con funciones por dentro para evitar interferir con otras partes de código
+    Entradas:
+    - NA
+    Salidas:
+    - Muestra los animales disponibles en la base de datos existente.
+    """
+    simbolos = {2: "🚑", 3: "🚑", 4: "🏛️", 5: "💀"} #Me da TOC el museo que se hace a la izquierda.
+    emojis = {2: "👍", 3: "🌟", 4: "😢", 5: "😠"}
     listaAnimales = cargarPickle("inventario.pkl")
     indice = 0 
     root = tk.Toplevel()
@@ -264,6 +342,14 @@ def mostrarInventario():
     contenedor.pack()
     framesAnimales = []
     def mostrarActuales():
+        """
+        Funcionamiento:
+        Muestra cuatro animales actuales en pantalla.
+        Entradas:
+        - NA
+        Salidas:
+        - Llama a la función mostrarAnimal para extraer la información y mostrarla.
+        """
         nonlocal framesAnimales, indice #Reasigna la lista de frames definida en la función principal
         for frame in framesAnimales:
             frame.destroy()
@@ -277,6 +363,14 @@ def mostrarInventario():
             framesAnimales.append(frame)
             mostrarAnimal(frame, animal)
     def mostrarAnimal(frame, animal):
+        """
+        Funcionamiento:
+        Muestra al animal en la ventana que muestra el inventario.
+        Entradas:
+        - Frame actual, animal que se mostrará
+        Salidas:
+        - En caso de calificar a un animal, se llamará a la función calificarAnimal.
+        """
         id, (nombreComun, _), url, [estado, calificacion, _, _] = animal.indicarDatos() #_ para datos que no se usan
         tk.Label(frame, text=nombreComun, font=("Arial", 10, "bold"), wraplength=150).pack(pady=2)
         if estado == 1:
@@ -296,27 +390,54 @@ def mostrarInventario():
             tk.Label(frame, text=simbolo, font=("Arial", 48)).pack()
         botones = tk.Frame(frame)
         botones.pack(pady=5)
-        for val, emoji in emojis.items():
-            estadoValido = ((val == 4 and estado in [2, 5]) or
-                            (val == 5 and estado == 3) or
-                            (val in [2, 3]))
+        for valor, emoji in emojis.items():
+            estadoValido = ((valor == 4 and estado in [2, 5]) or
+                            (valor == 5 and estado == 3) or
+                            (valor in [2, 3]))
             b = tk.Button(botones, text=emoji, width=3, font=("Segoe UI Emoji", 14),
-                          command=lambda a=animal, v=val: calificarAnimal(a, v))
+                          command=lambda a=animal, v=valor: calificarAnimal(a, v))
             if not estadoValido:
                 b.config(state="disabled")
-            if val == calificacion:
+            if valor == calificacion:
                 b.config(relief="sunken")
             b.pack(side="left")
     def calificarAnimal(animal, valor):
+        """
+        Funcionamiento:
+        Permite calificar al animal mostrado, modificando su valor en la base de datos al instante.
+        Entradas:
+        - Código del animal, valor el cual se le asignará
+        Salidas:
+        - Guarda en memoria secundaria el valor dado al animal.
+        - Llama a mostrar la ventana actual.
+        """
         animal.informacion[1] = valor
         guardarPickle("inventario.pkl", listaAnimales)
         mostrarActuales()
     def mostrarSiguiente():
+        """
+        Funcionamiento:
+        Muestra la ventana siguiente del inventario.
+        Entradas:
+        - NA
+        Salidas:
+        - Modifica "indice" que es una variable en la función externa.
+        - Llama a mostrar la ventana actual.
+        """
         nonlocal indice #Se usa nonlocal para modificar "indice" que está en la función externa
         if indice + 4 < len(listaAnimales):
             indice += 4
             mostrarActuales()
     def mostrarAnterior():
+        """
+        Funcionamiento:
+        Muestra la ventana anterior del inventario.
+        Entradas:
+        - NA
+        Salidas:
+        - Modifica "indice" que es una variable en la función externa.
+        - Llama a mostrar la ventana actual.
+        """
         nonlocal indice #Se usa nonlocal para modificar "indice" que está en la función externa
         if indice - 4 >= 0:
             indice -= 4
@@ -332,6 +453,16 @@ def mostrarInventario():
 ##################################################
 
 def crearObjetosAnimal(listaNombres):
+    """
+    Funcionamiento:
+    Por cada animal, busca en wikipedia como primer opción (Gemini como segunda por el límite de solicitudes)
+    para obtener la informacion de los animales.
+    Entradas:
+    - Lista de nombres de los animales seleccionados.
+    Salidas:
+    - Llama a obtenerDatosAnimal con el nombre del animal.
+    - Se le asigan los datos al animal y se retornan para ser guardados posterior.
+    """
     genai.configure(api_key="AIzaSyCj7ewGgJ0c7Cb_nHrHfzkN4lGDFlZ_iY0")
     model = genai.GenerativeModel(model_name="gemini-1.5-flash")
     animales = []
@@ -361,6 +492,15 @@ def crearObjetosAnimal(listaNombres):
     return animales
 
 def crearInventarioDesdeTxt():
+    """
+    Funcionamiento:
+    Crea el inventario de animales tomando 20 del txt generado.
+    Entradas:
+    - NA.
+    Salidas:
+    - Llama a crearObjetosAnimal con los 20 nombres seleccionados.
+    - Muestra retroalimentación del inventario creado y print de cad animal en la terminal, guarda en pickle.
+    """
     nombresSeleccionados = seleccionarAnimalesAleatorios("Animales", 20)
     listaObjetos = crearObjetosAnimal(nombresSeleccionados)
     print("\nObjetos creados:")
@@ -475,9 +615,9 @@ def main():
     diccGlobal["botones"]["boton4"].pack()
     diccGlobal["botones"]["boton5"] = tk.Button(root, text="5. Crear HTML", width=20, command=crearHTML)
     diccGlobal["botones"]["boton5"].pack()
-    diccGlobal["botones"]["boton6"] = tk.Button(root, text="6. Generar PDF", width=20)
+    diccGlobal["botones"]["boton6"] = tk.Button(root, text="6. Generar PDF", width=20, command=generarEstadisticasPdf)
     diccGlobal["botones"]["boton6"].pack()
-    diccGlobal["botones"]["boton7"] = tk.Button(root, text="7. Generar .csv", width=20)
+    diccGlobal["botones"]["boton7"] = tk.Button(root, text="7. Generar .csv", width=20, command=exportarAnimalesACSV)
     diccGlobal["botones"]["boton7"].pack()
     diccGlobal["botones"]["boton8"] = tk.Button(root, text="8. Búsqueda por orden", width=20, command=ventanaBusquedaPorOrden)
     diccGlobal["botones"]["boton8"].pack()

@@ -1,0 +1,21 @@
+ID,Nombre común,Nombre científico,URL imagen,Estado,Calificación,Tipo alimenticio,Peso
+ce01,Coyote,Coyote,https://upload.wikimedia.org/wikipedia/commons/9/9c/2009-Coyote-Yosemite.jpg,2,4,c,7.73
+aa02,Arana viuda negra,Arana viuda negra,https://upload.wikimedia.org/wikipedia/commons/9/93/Adult_Female_Black_Widow.jpg,4,3,o,62.81
+cn03,Chimpance comun,Chimpance comun,https://upload.wikimedia.org/wikipedia/commons/8/86/013_Alpha_male_chimpanzee_at_Kibale_forest_National_Park_Photo_by_Giles_Laurent.jpg,3,5,o,41.93
+ra04,Rana toro americana,Rana toro americana,https://upload.wikimedia.org/wikipedia/commons/8/8a/American_Bullfrog_Rana_catesbeiana_Side_1800px.jpg,4,3,o,42.41
+or05,Oso polar,Oso polar,https://upload.wikimedia.org/wikipedia/commons/6/6f/Modelo_de_Huella_de_oso_polar.jpg,3,3,c,51.41
+pe06,Panda gigante,Panda gigante,https://upload.wikimedia.org/wikipedia/commons/5/5c/1964-02_1964%E5%B9%B4_%E5%A4%A7%E7%86%8A%E7%8C%AB.jpg,3,5,c,56.84
+ie07,Iguana verde,Iguana verde,https://upload.wikimedia.org/wikipedia/commons/0/08/GreenIguanaMeals.jpg,3,5,o,14.9
+ga08,Gorila occidental de llanura,Gorila occidental de llanura,https://upload.wikimedia.org/wikipedia/commons/b/be/Floquet_de_Neu_Zoo_Barcelona.jpg,4,2,o,61.67
+ho09,Halcon peregrino,Halcon peregrino,https://upload.wikimedia.org/wikipedia/commons/a/ae/2016Falcon.jpg,5,1,o,22.1
+pr10,Pinguino emperador,Pinguino emperador,https://upload.wikimedia.org/wikipedia/commons/a/a3/Aptenodytes_forsteri_-Snow_Hill_Island%2C_Antarctica_-adults_and_juvenile-8.jpg,4,1,o,36.37
+co11,Castor americano,Castor americano,https://upload.wikimedia.org/wikipedia/commons/6/6b/American_Beaver.jpg,2,1,o,77.35
+er12,Escorpion emperador,Escorpion emperador,https://upload.wikimedia.org/wikipedia/commons/b/b6/NYCC_2016_-_Daredevil%2C_Scorpion_%26_Vulture_%2830235176245%29.jpg,1,1,o,21.91
+ma13,Mosca domestica,Mosca domestica,https://upload.wikimedia.org/wikipedia/commons/1/14/Common_house_fly%2C_Musca_domestica.jpg,2,1,o,67.97
+co14,Cocodrilo del Nilo,Cocodrilo del Nilo,https://upload.wikimedia.org/wikipedia/commons/e/e3/Cocodrilo_del_Nilo_%28Crocodylus_niloticus%29%2C_parque_nacional_Kruger%2C_Sud%C3%A1frica%2C_2018-07-26%2C_DD_11.jpg,2,1,o,56.82
+ta15,Tigre de Bengala,Tigre de Bengala,https://upload.wikimedia.org/wikipedia/commons/5/56/Bengaltiger_%28Panthera_tigris_tigris%29.jpg,5,1,o,56.03
+ee16,Escarabajo rinoceronte,Escarabajo rinoceronte,https://upload.wikimedia.org/wikipedia/commons/c/c5/Chalcosoma_atlas_male-0251.JPG,2,1,o,26.95
+ba17,Ballena jorobada,Ballena jorobada,https://upload.wikimedia.org/wikipedia/commons/8/89/Ballena_jorobada_y_ballenato_en_Bah%C3%ADa_M%C3%A1laga.JPG,4,1,o,72.12
+ma18,Mariposa monarca,Danaus plexippus,https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Monarch_Butterfly_on_Flower.jpg/1280px-Monarch_Butterfly_on_Flower.jpg,2,1,h,80.17
+pa19,Pulga humana,Pulga humana,https://upload.wikimedia.org/wikipedia/commons/c/cd/PulexIrritans.jpg,4,1,o,65.79
+fs20,Foca gris,Foca gris,https://upload.wikimedia.org/wikipedia/commons/6/6e/Distribution_of_the_grey_seal.png,5,1,o,1.63

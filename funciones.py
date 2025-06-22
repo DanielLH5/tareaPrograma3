@@ -176,6 +176,41 @@ def obtenerMatrizDatosBPO(listaPorDieta, documento):
     return matrizDatos
 
 ##################################################
+# 6. Crear PDF
+##################################################
+
+def agregarSeccion(pdf, titulo, animales, incluirEstado=False):
+    """
+    Funcionamiento:
+    Recibe y genera los grupos por calificación y los agrega al PDF 
+    Entradas:
+    - PDF, titulo (calificación perteneciente), animales y incluirEstado(para los 4 y 5)
+    Salidas:
+    - Agrega el grupo al PDF.
+    """
+    pdf.set_font("Arial", "B", 12)
+    pdf.cell(0, 10, titulo, ln=True)
+    encabezados = ["#", "Código", "Nombre común"]
+    if incluirEstado:
+        encabezados.append("Estado")
+    pdf.set_font("Arial", "B", 10)
+    for h in encabezados:
+        pdf.cell(45, 8, h, border=1)
+    pdf.ln()
+    pdf.set_font("Arial", "", 10)
+    for i, a in enumerate(animales, 1):
+        id, (nombre, _), _, info = a.indicarDatos()
+        fila = [str(i), id, nombre]
+        if incluirEstado:
+            estado = info[0]
+            estadoStr = {2: "Enfermo", 3: "Traslado", 4: "Traslado", 5: "Muerto"}.get(estado, "¿?")
+            fila.append(estadoStr)
+        for celda in fila:
+            pdf.cell(45, 8, celda, border=1)
+        pdf.ln()
+    pdf.ln(5)
+
+##################################################
 # 5. Crear HTML
 ##################################################
 
