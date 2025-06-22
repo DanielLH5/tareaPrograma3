@@ -437,6 +437,14 @@ def contarEstadosAnimales(estados):
 ##################################################
 
 def seleccionarAnimalesAleatorios(rutaArchivo, cantidad=20): #Lee cada linea del txt y toma 20 animales
+    """
+    Funcionamiento:
+    Lee los animales del txt y toma un total de 20 animales aleatoriamente
+    Entradas:
+    - Ruta del archivo, cantidad seleccionada (20).
+    Salidas:
+    - Retorna 20 seleccionados aleatoriamente.
+    """
     with open(rutaArchivo, "r", encoding="utf-8") as f:
         nombres = f.read().splitlines()
     seleccionados = random.sample(nombres, cantidad)
@@ -446,12 +454,28 @@ def seleccionarAnimalesAleatorios(rutaArchivo, cantidad=20): #Lee cada linea del
     return seleccionados
 
 def generarId(nombre, consecutivo): #Generar id único del nombre
+    """
+    Funcionamiento:
+    Genera un ID para el animal, tomando primer y última letra además de un consecutivo
+    Entradas:
+    - Nombre común del animal, consecutivo.
+    Salidas:
+    - String del ID generado.
+    """
     nombre = nombre.lower()
     primera = nombre[0]
     ultima = nombre[-1]
     return f"{primera}{ultima}{consecutivo:02d}"
 
 def obtenerDatosAnimalWikipedia(nombreComun):
+    """
+    Funcionamiento:
+    Intenta obtener los datos de wikipedia por descartes
+    Entradas:
+    - Nombre común del animal.
+    Salidas:
+    - nombreCientifico, tipoAlimentacion, imagenValida.
+    """
     try:
         wikipedia.set_lang("es")
         page = wikipedia.page(nombreComun)
@@ -472,11 +496,20 @@ def obtenerDatosAnimalWikipedia(nombreComun):
         return "desconocido", "omnívoro", ""
 
 def obtenerDatosAnimal(nombreComun, model):
+    """
+    Funcionamiento:
+    Por nombre común, obtiene en wikipedia nombre cientifico, tipo de aliemntación y un URL.
+    En caso de fallar el URL, pide los datos a Gemini
+    Entradas:
+    - Nombre común del animal, model de Gemini.
+    Salidas:
+    - nombreCientifico, tipoAlimentacion, uRlLImagen.
+    """
     nombreCientifico, tipoAlimentacion, urlImagen = obtenerDatosAnimalWikipedia(nombreComun) #Buscar de wikipedia
     if urlImagen:
         return nombreCientifico, tipoAlimentacion, urlImagen
     try:#En caso de que Wikipedia falle, se piden los datos a gemini
-        #Prompt a utilizar con Gemini
+        #Prompt a utilizar con Gemini, no se utiliza como primera opción por el límite de peticiones.
         prompt = (
             f"Dame el nombre científico, el tipo de alimentación (solo responde 'carnívoro', 'herbívoro' u 'omnívoro') "
             f"y una URL de imagen del animal '{nombreComun}'. No uses viñetas ni encabezados. Responde separado por saltos de línea.")
