@@ -447,7 +447,6 @@ def mostrarInventario():
     tk.Button(nav, text="<< Anterior", command=mostrarAnterior).pack(side="left")
     tk.Button(nav, text="Siguiente >>", command=mostrarSiguiente).pack(side="left")
     mostrarActuales()
-    validarBotonesRestantes() # Valida los botones restantes
 
 ##################################################
 # 2. Crear inventario
@@ -600,20 +599,6 @@ def ventanaObtenerLista():
 ##################################################
 # Ventana Principal
 ##################################################
-
-def validarBotonesRestantes():
-    """
-    Funcionamiento:
-    Habilita los botones del 3 al 8 dependiendo de si ya se realizó la acción del botón 3.
-    Entradas:
-    - NA
-    Salidas:
-    - Actualiza el estado ('active') de los botones.
-    """
-    if cargarPickle(inventarioPkl):
-        for i in range(3, 9):  #Botones del 3 al 8
-            diccGlobal["botones"][f"boton{i}"].config(state="active")
-        diccGlobal["root"].update()
     
 def habilitarBotonesP3():
     """
