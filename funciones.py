@@ -26,6 +26,25 @@ def grabaTxt(archivoTxt,datos):
         print(f"Error al leer el archivo: {archivoTxt}")
     return
 
+def leeTxt(archivoTxt):
+    """
+    Funcionamiento:
+    Lee todo el contenido de un archivo de texto y lo devuelve como una cadena.
+    Entradas:
+    - archivoTxt (str): Nombre del archivo a leer.
+    Salidas:
+    - str: Contenido del archivo si se puede leer.
+    - False: Si ocurre un error durante la lectura.
+    """
+    datos = []
+    try:
+        f=open(archivoTxt,"r")
+        datos = f.read()
+        f.close()
+        return datos
+    except:
+        return False
+
 def guardarPickle(nombreArchivo, datos):
     """
     Funcionamiento:
