@@ -447,6 +447,7 @@ def mostrarInventario():
     tk.Button(nav, text="<< Anterior", command=mostrarAnterior).pack(side="left")
     tk.Button(nav, text="Siguiente >>", command=mostrarSiguiente).pack(side="left")
     mostrarActuales()
+    validarBotonesRestantes() # Valida los botones restantes
 
 ##################################################
 # 2. Crear inventario
@@ -467,6 +468,7 @@ def crearObjetosAnimal(listaNombres):
     model = genai.GenerativeModel(model_name="gemini-1.5-flash")
     animales = []
     consecutivo = 1
+    print("Creando objetos...") ####################################
     for nombre in listaNombres:
         nombreCientifico, tipo, url = obtenerDatosAnimal(nombre, model)
         estado = random.randint(1, 5)
@@ -501,14 +503,21 @@ def crearInventarioDesdeTxt():
     - Llama a crearObjetosAnimal con los 20 nombres seleccionados.
     - Muestra retroalimentación del inventario creado y print de cad animal en la terminal, guarda en pickle.
     """
-    nombresSeleccionados = seleccionarAnimalesAleatorios("Animales", 20)
-    listaObjetos = crearObjetosAnimal(nombresSeleccionados)
-    print("\nObjetos creados:")
-    for animal in listaObjetos:
-        print(animal.indicarDatos())
-    guardarPickle("inventario.pkl", listaObjetos)
-    ventanaConfirmacion("Inventario creado y guardado con éxito en inventario.pkl.")
-    return listaObjetos
+    try:
+        nombresSeleccionados = seleccionarAnimalesAleatorios(animalesTxt, 20)
+        listaObjetos = crearObjetosAnimal(nombresSeleccionados)
+        print("\nObjetos creados:")
+        for animal in listaObjetos:
+            print(animal.indicarDatos())
+        guardarPickle("inventario.pkl", listaObjetos)
+        ventanaConfirmacion("Inventario creado y guardado con éxito en inventario.pkl.")
+        diccGlobal["botones"][f"boton3"].config(state="active")
+        diccGlobal["root"].update()
+        habilitarBotonesP3()
+        return listaObjetos
+    except Exception as e:
+        print(f"[ERROR] Al crear inventario: {e}")
+        ventanaConfirmacion(f"Error: {e}")
 
 ##################################################
 # 1. Obtener lista
@@ -537,9 +546,11 @@ def obtenerLista(numeroTotales):
         resultado = limpiarTexto(resultado)
         lineas = resultado.splitlines()
         resultadoLimpio = obtenerTextoAniLimpio(lineas)
-        grabaTxt("Animales", resultadoLimpio)
+        grabaTxt(animalesTxt, resultadoLimpio)
         mensaje = f"Se ha creado el txt con los {numeroTotales} animales."
         ventanaConfirmacion(mensaje)
+        diccGlobal["botones"][f"boton2"].config(state="active")
+        diccGlobal["root"].update()
     except Exception as e:
         print(f"Ha ocurrido un error con: {e}")
 
@@ -575,7 +586,7 @@ def ventanaObtenerLista():
     - NA (la función invoca otras funciones en base a la interacción del usuario).
     """
     search = tk.Toplevel()
-    search.title("Obtener animales")
+    search.title("Obtener animales") #Animales
     search.geometry("300x200")
     etiqueta = tk.Label(search, text="Ingrese el número de animales:")
     etiqueta.pack(pady=(10, 5)) #5 píxeles arriba y 10 abajo
@@ -590,6 +601,36 @@ def ventanaObtenerLista():
 # Ventana Principal
 ##################################################
 
+def validarBotonesRestantes():
+    """
+    Funcionamiento:
+    Habilita los botones del 3 al 8 dependiendo de si ya se realizó la acción del botón 3.
+    Entradas:
+    - NA
+    Salidas:
+    - Actualiza el estado ('active') de los botones.
+    """
+    if cargarPickle(inventarioPkl):
+        for i in range(3, 9):  #Botones del 3 al 8
+            diccGlobal["botones"][f"boton{i}"].config(state="active")
+        diccGlobal["root"].update()
+    
+def habilitarBotonesP3():
+    """
+    Funcionamiento:
+    Habilita los botones del 3 al 8 y deshabilita los botones 1 y 2. Dependiendo si ya existe documentos en memoria secundaria.
+    Entradas:
+    - NA
+    Salidas:
+    - Actualiza el estado ('active' o 'disabled') de los botones.
+    """
+    if cargarPickle(inventarioPkl) and leeTxt(animalesTxt):
+        for i in range(3, 9):  #Botones del 3 al 8
+            diccGlobal["botones"][f"boton{i}"].config(state="active")
+        diccGlobal["botones"][f"boton1"].config(state="disabled")
+        diccGlobal["botones"][f"boton2"].config(state="disabled")
+        diccGlobal["root"].update()
+    
 def main():
     """
     Funcionamiento:
@@ -607,20 +648,30 @@ def main():
     title.pack()
     diccGlobal["botones"]["boton1"] = tk.Button(root, text="1. Obtener lista", width=20, command=ventanaObtenerLista)
     diccGlobal["botones"]["boton1"].pack()  
-    diccGlobal["botones"]["boton2"] = tk.Button(root, text="2. Crear Inventario", width=20, command=crearInventarioDesdeTxt)
+    diccGlobal["botones"]["boton2"] = tk.Button(root, text="2. Crear Inventario", width=20, command=crearInventarioDesdeTxt, state="disabled")
     diccGlobal["botones"]["boton2"].pack()
-    diccGlobal["botones"]["boton3"] = tk.Button(root, text="3. Mostrar Inventario", width=20, command=mostrarInventario)
+    diccGlobal["botones"]["boton3"] = tk.Button(root, text="3. Mostrar Inventario", width=20, command=mostrarInventario, state="disabled")
     diccGlobal["botones"]["boton3"].pack()
-    diccGlobal["botones"]["boton4"] = tk.Button(root, text="4. Estadística por estado", width=20, command=obtenerEstadísticaPorEstado)
+    diccGlobal["botones"]["boton4"] = tk.Button(root, text="4. Estadística por estado", width=20, command=obtenerEstadísticaPorEstado, state="disabled")
     diccGlobal["botones"]["boton4"].pack()
-    diccGlobal["botones"]["boton5"] = tk.Button(root, text="5. Crear HTML", width=20, command=crearHTML)
+    diccGlobal["botones"]["boton5"] = tk.Button(root, text="5. Crear HTML", width=20, command=crearHTML, state="disabled")
     diccGlobal["botones"]["boton5"].pack()
-    diccGlobal["botones"]["boton6"] = tk.Button(root, text="6. Generar PDF", width=20, command=generarEstadisticasPdf)
+    diccGlobal["botones"]["boton6"] = tk.Button(root, text="6. Generar PDF", width=20, command=generarEstadisticasPdf, state="disabled")
     diccGlobal["botones"]["boton6"].pack()
-    diccGlobal["botones"]["boton7"] = tk.Button(root, text="7. Generar .csv", width=20, command=exportarAnimalesACSV)
+    diccGlobal["botones"]["boton7"] = tk.Button(root, text="7. Generar .csv", width=20, command=exportarAnimalesACSV, state="disabled")
     diccGlobal["botones"]["boton7"].pack()
-    diccGlobal["botones"]["boton8"] = tk.Button(root, text="8. Búsqueda por orden", width=20, command=ventanaBusquedaPorOrden)
+    diccGlobal["botones"]["boton8"] = tk.Button(root, text="8. Búsqueda por orden", width=20, command=ventanaBusquedaPorOrden, state="disabled")
     diccGlobal["botones"]["boton8"].pack()
+    if cargarPickle(inventarioPkl):
+        print("El pkl existe")
+    if leeTxt(animalesTxt):
+        print("El txt existe")
+    if cargarPickle(inventarioPkl) and leeTxt(animalesTxt):
+        for i in range(3, 9):  #Botones del 3 al 8
+            diccGlobal["botones"][f"boton{i}"].config(state="active")
+        diccGlobal["botones"][f"boton1"].config(state="disabled")
+        diccGlobal["botones"][f"boton2"].config(state="disabled")
+        diccGlobal["root"].update()
     root.mainloop()
 
 diccGlobal = {
