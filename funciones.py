@@ -1,4 +1,6 @@
 import unicodedata
+from bs4 import BeautifulSoup
+import re
 import pickle
 import random
 import wikipedia
@@ -455,6 +457,24 @@ def contarEstadosAnimales(estados):
 # 2. Crear inventario
 ##################################################
 
+def extraerNombreCientificoDesdeHTML(html):
+    """
+    Funcionamiento: Extrae el primer nombre científico válido desde el HTML de la página de Wikipedia.
+    Busca enlaces con nombre en cursiva o patrones similares.
+    Salidas:
+    - nombreCientifico (str) o None
+    """
+    soup = BeautifulSoup(html, "html.parser") #Crea una estructura analizadora del HTML para facilitar la búsqueda del nombre.
+    for i in soup.find_all("i"): #Buscar en etiquetas <i> que estén dentro de enlaces
+        texto = i.get_text().strip()
+        if " " in texto and texto[0].isupper(): #Ejemplo: Pan troglodytes
+            return texto
+    for a in soup.find_all("a"): #Alternativamente buscar en <a> que parezcan nombres científicos
+        texto = a.get_text().strip()
+        if " " in texto and texto[0].isupper() and not texto[1:].islower(): #Ejem: Pan troglodytes
+            return texto
+    return None
+
 def seleccionarAnimalesAleatorios(rutaArchivo, cantidad=20): #Lee cada linea del txt y toma 20 animales
     """
     Funcionamiento:
@@ -499,6 +519,11 @@ def obtenerDatosAnimalWikipedia(nombreComun):
         wikipedia.set_lang("es")
         page = wikipedia.page(nombreComun)
         resumen = wikipedia.summary(nombreComun, sentences=2).lower()
+        html = page.html()
+        nombreCientifico = extraerNombreCientificoDesdeHTML(html)
+        if not nombreCientifico: #Buscar algo que parezca un nombre científico en el resumen si no sirve el otro
+            match = re.search(r"\(([^)]+ [a-z]+)\)", page.summary)
+            nombreCientifico = match.group(1) if match else nombreComun 
         imagenValida = ""
         for img in page.images: #Recorre todas las URLs de imágenes que encontró Wikipedia
             #Filtra para evitar imágenes que sean logos o imágenes en formato .svg
@@ -510,7 +535,7 @@ def obtenerDatosAnimalWikipedia(nombreComun):
             tipo = "herbívoro"
         elif "carnívor" in resumen:
             tipo = "carnívoro"
-        return nombreComun, tipo, imagenValida
+        return nombreCientifico, tipo, imagenValida
     except:
         return "desconocido", "omnívoro", ""
 
