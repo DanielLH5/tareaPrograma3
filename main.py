@@ -447,6 +447,7 @@ def mostrarInventario():
     tk.Button(nav, text="<< Anterior", command=mostrarAnterior).pack(side="left")
     tk.Button(nav, text="Siguiente >>", command=mostrarSiguiente).pack(side="left")
     mostrarActuales()
+    habilitarBotonesRestantes()
 
 ##################################################
 # 2. Crear inventario
@@ -512,7 +513,8 @@ def crearInventarioDesdeTxt():
         ventanaConfirmacion("Inventario creado y guardado con éxito en inventario.pkl.")
         diccGlobal["botones"][f"boton3"].config(state="active")
         diccGlobal["root"].update()
-        habilitarBotonesP3()
+        diccGlobal["botones"][f"boton3"].config(state="active")
+        diccGlobal["root"].update()
         return listaObjetos
     except Exception as e:
         print(f"[ERROR] Al crear inventario: {e}")
@@ -600,20 +602,18 @@ def ventanaObtenerLista():
 # Ventana Principal
 ##################################################
     
-def habilitarBotonesP3():
+def habilitarBotonesRestantes():
     """
     Funcionamiento:
-    Habilita los botones del 3 al 8 y deshabilita los botones 1 y 2. Dependiendo si ya existe documentos en memoria secundaria.
+    Habilita los botones del 3 al 8. Dependiendo si ya existe documentos en memoria secundaria.
     Entradas:
     - NA
     Salidas:
-    - Actualiza el estado ('active' o 'disabled') de los botones.
+    - Actualiza el estado ('active') de los botones.
     """
     if cargarPickle(inventarioPkl) and leeTxt(animalesTxt):
         for i in range(3, 9):  #Botones del 3 al 8
             diccGlobal["botones"][f"boton{i}"].config(state="active")
-        diccGlobal["botones"][f"boton1"].config(state="disabled")
-        diccGlobal["botones"][f"boton2"].config(state="disabled")
         diccGlobal["root"].update()
     
 def main():
@@ -649,8 +649,12 @@ def main():
     diccGlobal["botones"]["boton8"].pack()
     if cargarPickle(inventarioPkl):
         print("El pkl existe")
+    else:
+        print("El pkl no esxite")
     if leeTxt(animalesTxt):
         print("El txt existe")
+    else:
+        print("El txt no esxite")
     if cargarPickle(inventarioPkl) and leeTxt(animalesTxt):
         for i in range(3, 9):  #Botones del 3 al 8
             diccGlobal["botones"][f"boton{i}"].config(state="active")
