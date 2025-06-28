@@ -336,8 +336,7 @@ def mostrarInventario():
     indice = 0 
     root = tk.Toplevel()
     root.title("Inventario :3")
-    root.geometry("600x500")
-    root.resizable(False, False) #Desactiva la redimension
+    root.geometry("600x560")
     contenedor = tk.Frame(root)
     contenedor.pack()
     framesAnimales = []
@@ -650,11 +649,11 @@ def main():
     if cargarPickle(inventarioPkl):
         print("El pkl existe")
     else:
-        print("El pkl no esxite")
+        print("El pkl no exite")
     if leeTxt(animalesTxt):
         print("El txt existe")
     else:
-        print("El txt no esxite")
+        print("El txt no exite")
     if cargarPickle(inventarioPkl) and leeTxt(animalesTxt):
         for i in range(3, 9):  #Botones del 3 al 8
             diccGlobal["botones"][f"boton{i}"].config(state="active")

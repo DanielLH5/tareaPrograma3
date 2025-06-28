@@ -6,26 +6,15 @@ Chimpance comun
 Orangutan de Borneo
 Elefante africano de sabana
 Rinoceronte blanco
-Hipopotamo comun
 Jirafa reticulada
-Cebra de llanuras
-Bufalo cafre
-Guepardo
-Leopardo
-Lince iberico
-Zorro rojo
-Coyote
-Lobo gris
-Oso pardo
-Oso polar
+Hipopotamo comun
 Ballena jorobada
-Delfin mular
-Orca
-Foca comun
-Pinguino emperador
+Delfin nariz de botella
+Oso polar
+Lobo gris
+Coyote
+Puma
 Aguila real
-Condor andino
-Serpiente cascabel de diamante occidental
-Cocodrilo del Nilo
-Rana toro americana
+Condor de los Andes
 Mariposa monarca
+Salamandra gigante china

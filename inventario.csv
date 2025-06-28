@@ -1,21 +1,21 @@
 ID,Nombre común,Nombre científico,URL imagen,Estado,Calificación,Tipo alimenticio,Peso
-ta01,Tigre de Bengala,P. t. fluviatilis,https://upload.wikimedia.org/wikipedia/commons/5/56/Bengaltiger_%28Panthera_tigris_tigris%29.jpg,1,1,o,3.7
-dr02,Delfin mular,Tursiops truncatus,https://upload.wikimedia.org/wikipedia/commons/0/0e/Bottlenose_dolphin_with_young.JPG,2,1,o,27.86
-ma03,Mariposa monarca,Danaus plexippus,https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Monarch_Butterfly_on_Milkweed.jpg/1280px-Monarch_Butterfly_on_Milkweed.jpg,4,1,h,97.43
-co04,Condor andino,Vultur fossilis,https://upload.wikimedia.org/wikipedia/commons/b/b9/AndeanCondorMale.jpg,2,1,o,32.54
-ea05,Elefante africano de sabana,Loxodonta africana,https://upload.wikimedia.org/wikipedia/commons/a/a9/African_Bush_Elephants.jpg,4,1,o,77.6
-go06,Guepardo,Felis jubata,https://upload.wikimedia.org/wikipedia/commons/a/ab/2009-cheetah-sprint.jpg,2,1,c,67.74
-oo07,Oso pardo,Ursus arctos,https://upload.wikimedia.org/wikipedia/commons/7/71/2010-kodiak-bear-1.jpg,5,1,c,73.15
-or08,Oso polar,Ursus maritimus,https://upload.wikimedia.org/wikipedia/commons/6/6f/Modelo_de_Huella_de_oso_polar.jpg,1,1,c,21.47
-ga09,Gorila occidental de llanura,G. gorilla,https://upload.wikimedia.org/wikipedia/commons/b/be/Floquet_de_Neu_Zoo_Barcelona.jpg,5,1,o,69.39
-zo10,Zorro rojo,Canis vulpes,https://upload.wikimedia.org/wikipedia/commons/e/ec/A_little_fox_in_the_National_Park_Tablas_de_Daimiel_-_Ciudad_Real_-_Spain_-_panoramio.jpg,4,1,o,42.69
-sl11,Serpiente cascabel de diamante occidental,C. catalinensis,https://upload.wikimedia.org/wikipedia/commons/a/a3/Crotalus_atrox_%282%29.jpg,3,1,o,10.92
-ra12,Rana toro americana,Rana catesbeiana,https://upload.wikimedia.org/wikipedia/commons/8/8a/American_Bullfrog_Rana_catesbeiana_Side_1800px.jpg,1,1,o,8.36
-fn13,Foca comun,P. vitulina,https://upload.wikimedia.org/wikipedia/commons/0/00/Common_Seal_Phoca_vitulina.jpg,4,1,o,28.69
-lo14,Lince iberico,L. pardinus,https://upload.wikimedia.org/wikipedia/commons/7/7d/Cospedal_acompa%C3%B1a_a_la_Reina_Dona_Sofia_en_la_suelta_de_dos_linces_en_Mazarambroz.jpg,5,1,c,66.8
-lo15,Leon africano,Panthera leo,https://upload.wikimedia.org/wikipedia/commons/7/77/002_The_lion_king_Snyggve_in_the_Serengeti_National_Park_Photo_by_Giles_Laurent.jpg,4,1,c,73.81
-co16,Cocodrilo del Nilo,Crocodylus vulgaris,https://upload.wikimedia.org/wikipedia/commons/e/e3/Cocodrilo_del_Nilo_%28Crocodylus_niloticus%29%2C_parque_nacional_Kruger%2C_Sud%C3%A1frica%2C_2018-07-26%2C_DD_11.jpg,3,1,o,19.34
-be17,Bufalo cafre,S. caffer,https://upload.wikimedia.org/wikipedia/commons/c/cb/African_Buffalo.JPG,1,1,o,1.42
-ro18,Rinoceronte blanco,C. s. cottoni,https://upload.wikimedia.org/wikipedia/commons/5/56/Bronx_zoo%2C_New_York%2C_USA_%2848713756167%29.jpg,4,1,o,52.14
-ce19,Coyote,Canis latrans,https://upload.wikimedia.org/wikipedia/commons/9/9c/2009-Coyote-Yosemite.jpg,2,1,c,4.02
-oe20,Oso panda gigante,A. melanoleuca,https://upload.wikimedia.org/wikipedia/commons/5/5c/1964-02_1964%E5%B9%B4_%E5%A4%A7%E7%86%8A%E7%8C%AB.jpg,4,1,c,3.21
+cn01,Chimpance comun,Pan troglodytes verus,https://upload.wikimedia.org/wikipedia/commons/8/86/013_Alpha_male_chimpanzee_at_Kibale_forest_National_Park_Photo_by_Giles_Laurent.jpg,3,3,o,24.7
+ja02,Jirafa reticulada,G. reticulata,https://upload.wikimedia.org/wikipedia/commons/c/c2/Girafe_r%C3%A9ticul%C3%A9e_1.jpg,4,3,o,77.46
+sa03,Salamandra gigante china,Andrias davidianus,https://upload.wikimedia.org/wikipedia/commons/d/df/2009_Andrias_davidianus.JPG,1,2,o,20.23
+ce04,Coyote,Canis latrans,https://upload.wikimedia.org/wikipedia/commons/9/9c/2009-Coyote-Yosemite.jpg,3,5,c,78.03
+oo05,Orangutan de Borneo,P. pygmaeus,https://upload.wikimedia.org/wikipedia/commons/6/6c/Mapa_distribuicao_pongo_pygmaeus.png,1,2,c,20.27
+ga06,Gorila occidental de llanura,G. gorilla,https://upload.wikimedia.org/wikipedia/commons/b/be/Floquet_de_Neu_Zoo_Barcelona.jpg,1,2,o,8.69
+ea07,Elefante africano de sabana,Loxodonta africana,https://upload.wikimedia.org/wikipedia/commons/a/a9/African_Bush_Elephants.jpg,1,3,o,20.83
+ba08,Ballena jorobada,Megaptera novaengliae,https://upload.wikimedia.org/wikipedia/commons/8/89/Ballena_jorobada_y_ballenato_en_Bah%C3%ADa_M%C3%A1laga.JPG,3,1,o,3.18
+or09,Oso polar,Ursus maritimus,https://upload.wikimedia.org/wikipedia/commons/6/6f/Modelo_de_Huella_de_oso_polar.jpg,5,1,c,39.97
+da10,Delfin nariz de botella,Tursiops truncatus,https://upload.wikimedia.org/wikipedia/commons/0/0e/Bottlenose_dolphin_with_young.JPG,5,1,o,46.13
+ro11,Rinoceronte blanco,C. s. cottoni,https://upload.wikimedia.org/wikipedia/commons/5/56/Bronx_zoo%2C_New_York%2C_USA_%2848713756167%29.jpg,4,1,o,1.95
+lo12,Leon africano,Panthera leo,https://upload.wikimedia.org/wikipedia/commons/7/77/002_The_lion_king_Snyggve_in_the_Serengeti_National_Park_Photo_by_Giles_Laurent.jpg,3,2,c,56.07
+ta13,Tigre de Bengala,P. t. fluviatilis,https://upload.wikimedia.org/wikipedia/commons/5/56/Bengaltiger_%28Panthera_tigris_tigris%29.jpg,4,3,o,4.03
+ls14,Lobo gris,Canis lupus,https://upload.wikimedia.org/wikipedia/commons/7/76/Adult_male_German_shepherd_dog_standing_at_the_beach_%28retouched%29.jpg,2,1,c,35.55
+al15,Aguila real,Aquila chrysaetos,https://upload.wikimedia.org/wikipedia/commons/0/09/001_Wild_Golden_Eagle_and_Majinghorn_Pfyn-Finges_Photo_by_Giles_Laurent.jpg,2,1,o,74.38
+ma16,Mariposa monarca,Danaus plexippus,https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Monarch_Butterfly_Danaus_plexippus_%284602778260%29.jpg/1280px-Monarch_Butterfly_Danaus_plexippus_%284602778260%29.jpg,2,4,h,98.37
+oe17,Oso panda gigante,A. melanoleuca,https://upload.wikimedia.org/wikipedia/commons/5/5c/1964-02_1964%E5%B9%B4_%E5%A4%A7%E7%86%8A%E7%8C%AB.jpg,1,2,c,76.79
+hn18,Hipopotamo comun,Hippopotamus amphibius,https://upload.wikimedia.org/wikipedia/commons/8/87/Beware_of_hippopotamus.jpg,1,3,h,81.62
+pa19,Puma,Puma concolor,https://upload.wikimedia.org/wikipedia/commons/d/d3/06g.jpg,1,2,c,0.05
+cs20,Condor de los Andes,Vultur fossilis,https://upload.wikimedia.org/wikipedia/commons/b/b9/AndeanCondorMale.jpg,5,1,o,22.26

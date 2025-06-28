@@ -517,27 +517,38 @@ def obtenerDatosAnimalWikipedia(nombreComun):
     """
     try:
         wikipedia.set_lang("es")
-        page = wikipedia.page(nombreComun)
-        resumen = wikipedia.summary(nombreComun, sentences=2).lower()
-        html = page.html()
+        pagina = wikipedia.page(nombreComun)
+        resumen = wikipedia.summary(nombreComun, sentences=3).lower()
+        resumen = resumen.replace("busca fuentes:", "").strip() #Deshacerse de ese texto para el nombre científico
+        html = pagina.html()
         nombreCientifico = extraerNombreCientificoDesdeHTML(html)
         if not nombreCientifico: #Buscar algo que parezca un nombre científico en el resumen si no sirve el otro
-            match = re.search(r"\(([^)]+ [a-z]+)\)", page.summary)
-            nombreCientifico = match.group(1) if match else nombreComun 
+            match = re.search(r"\\(([^)]+ [a-z]+)\\)", pagina.summary)
+            nombreCientifico = match.group(1) if match else nombreComun
         imagenValida = ""
-        for img in page.images: #Recorre todas las URLs de imágenes que encontró Wikipedia
+        for img in pagina.images: #Recorre todas las URLs de imágenes que encontró Wikipedia
             #Filtra para evitar imágenes que sean logos o imágenes en formato .svg
             if not any(excluido in img for excluido in ["commons-logo", "wikimedia-logo", ".svg"]):
                 imagenValida = img
                 break
-        tipo = "omnívoro" #De base que sea omnívoro
-        if "herbívor" in resumen:
+        #Determinar tipo de alimentación revisando palabras claves comunes de dieta
+        tipo = "desconocido" #De base que sea desconocido
+        if any(palabra in resumen for palabra in ["come carne", "caza", "depredador", "se alimenta de animales"]):
+            tipo = "carnívoro"
+        elif any(palabra in resumen for palabra in ["come plantas", "herbívor", "se alimenta de hierbas", "pastar"]):
             tipo = "herbívoro"
+        elif any(palabra in resumen for palabra in ["come de todo", "dieta variada", "omnívoro"]):
+            tipo = "omnívoro"
         elif "carnívor" in resumen:
             tipo = "carnívoro"
+        elif "herbívor" in resumen:
+            tipo = "herbívoro"
+        elif "omnívor" in resumen:
+            tipo = "omnívoro"
         return nombreCientifico, tipo, imagenValida
-    except:
-        return "desconocido", "omnívoro", ""
+    except Exception as e:
+        print(f"Error al obtener datos de {nombreComun}: {e}")
+        return "desconocido", "desconocido", ""
 
 def obtenerDatosAnimal(nombreComun, model):
     """
